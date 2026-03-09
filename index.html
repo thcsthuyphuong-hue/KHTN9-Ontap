@@ -314,9 +314,13 @@
         let isPractice = true;
         let finished = false;
 
-        function shuffle(array) {
-            return array.sort(() => Math.random() - 0.5);
-        }
+      function shuffle(arr){
+    for(let i = arr.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
 
         async function initGame(mode) {
             const name = document.getElementById('input-name').value.trim();
@@ -407,13 +411,13 @@
             body.innerHTML = (q.context ? `<strong>${q.context}</strong><br><br>` : "") + q.q;
 
             // Type handling
-            if (!q.type) {
-                if (q.statements) q.type = 'tf';
-                else if (q.answer) q.type = 'short';
-                else q.type = 'mcq';
-            }
+            let qtype;
 
-            if (q.type === 'mcq') {
+if (q.statements) qtype = 'tf';
+else if (q.options) qtype = 'mcq';
+else qtype = 'short';
+}
+            if (qtype === 'mcq') {
                 const grid = document.createElement('div');
                 grid.className = 'options-grid';
                 q.options.forEach((opt, idx) => {
@@ -425,7 +429,7 @@
                 });
                 container.appendChild(grid);
             } 
-            else if (q.type === 'tf') {
+            else if (qtype === 'tf') {
                 const box = document.createElement('div');
                 box.className = 'tf-container';
                 q.statements.forEach((stmt) => {
@@ -443,7 +447,7 @@
                 });
                 container.appendChild(box);
             }
-            else if (q.type === 'short') {
+            else if (qtype === 'short') {
                 const wrap = document.createElement('div');
                 wrap.className = 'short-wrapper';
                 wrap.innerHTML = `
@@ -461,7 +465,7 @@
             document.getElementById('btn-next').classList.toggle('hidden', currentIndex === 19);
             document.getElementById('btn-submit').classList.toggle('hidden', currentIndex !== 19);
 
-            resetTimer(q.type);
+            resetTimer(qtype);
             
             if (window.MathJax) {
                 MathJax.typesetPromise([body, container]).catch(err => console.log(err));
@@ -483,12 +487,12 @@
         function checkQuestionComplete() {
             const q = currentQuiz[currentIndex];
             if (!q) return false;
-            if (q.type === 'mcq') return userAnswers[q.id] !== undefined;
-            if (q.type === 'tf') {
+            if (qtype === 'mcq') return userAnswers[q.id] !== undefined;
+            if (qtype === 'tf') {
                 const ans = userAnswers[q.id] || {};
                 return q.statements.every(s => ans[s.id] !== undefined);
             }
-            if (q.type === 'short') return (userAnswers[q.id] || "").trim() !== "";
+            if (qtype === 'short') return (userAnswers[q.id] || "").trim() !== "";
             return false;
         }
 
@@ -534,8 +538,8 @@
   sobaodanh: document.getElementById("input-sbd").value,
   hovaten: document.getElementById("input-name").value,
   lop: document.getElementById("input-class").value,
-  diem: score,
-  time: timeSpent
+  diem: document.getElementById("final-score").textContent,
+  time: 0
 });
             playSfx('submit');
             
@@ -564,7 +568,7 @@
                 let status = 'wrong';
                 let feedbackHTML = '';
 
-                if (q.type === 'mcq') {
+                if (qtype === 'mcq') {
                     const uAns = userAnswers[q.id];
                     const isRight = uAns === q.answer;
                     if (isRight) { qScore = 0.25; status = 'correct'; }
@@ -578,7 +582,7 @@
                     });
                     feedbackHTML = `<div class="review-options-list">${optsHTML}</div><div class="review-result-summary"><b>Thí sinh đã chọn:</b> ${uAns !== undefined ? String.fromCharCode(65+uAns) : 'Trống'}. <b>Đáp án đúng:</b> ${String.fromCharCode(65+q.answer)}</div>`;
                 } 
-                else if (q.type === 'tf') {
+                else if (qtype === 'tf') {
                     let correctCount = 0;
                     const uAns = userAnswers[q.id] || {};
                     let stmtRows = '';
@@ -597,7 +601,7 @@
                     if (correctCount > 0 && correctCount < 4) status = 'partial';
                     feedbackHTML = `<div style="margin:10px 0; border:1px solid #eee; border-radius:8px;">${stmtRows}</div><div class="review-result-summary">Đúng ${correctCount}/4 ý. Điểm: ${qScore.toFixed(4)}</div>`;
                 }
-                else if (q.type === 'short') {
+                else if (qtype === 'short') {
                     const uVal = (userAnswers[q.id] || "").trim();
                     const isRight = q.answer.some(a => a.replace('.', ',') === uVal.replace('.', ','));
                     if (isRight) { qScore = 0.5; status = 'correct'; }
@@ -664,7 +668,7 @@ window.db = db;
     await addDoc(collection(db, "ketqua"), {
       sobaodanh: data.sobaodanh,
       hovaten: data.hovaten,
-      Lop: data.lop,
+      lop: data.lop,
       diem: data.diem,
       thoigian_lambai: data.time,
       thoigian_nopbai: serverTimestamp()
@@ -677,3 +681,4 @@ window.db = db;
 </script>
 </body>
 </html>
+
