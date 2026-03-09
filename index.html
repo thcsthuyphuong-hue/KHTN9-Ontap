@@ -538,16 +538,19 @@ else qtype = 'short';
             if (confirm("Bạn có chắc chắn muốn nộp bài ngay?")) finishQuiz();
         }
 
-        function finishQuiz() {
-            if (finished) return;
-            finished = true;
-            clearInterval(timer);
-            saveResult({
-  sobaodanh: document.getElementById("input-sbd").value,
-  hovaten: document.getElementById("input-name").value,
-  lop: document.getElementById("input-class").value,
-  diem: document.getElementById("final-score").textContent,
-  time: 0
+      function finishQuiz() {
+    if (finished) return;
+    finished = true;
+    clearInterval(timer);
+
+    calculateScore();
+
+    saveResult({
+        sobaodanh: document.getElementById("input-sbd").value,
+        hovaten: document.getElementById("input-name").value,
+        lop: document.getElementById("input-class").value,
+        diem: document.getElementById("final-score").textContent,
+        time: 0
 });
             playSfx('submit');
             
@@ -693,6 +696,7 @@ window.db = db;
 </script>
 </body>
 </html>
+
 
 
 
