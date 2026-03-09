@@ -111,14 +111,9 @@ loadData();
 </script>
 <script>
 function exportExcel(){
-
 const table = document.getElementById("result-table");
-
 const ws = XLSX.utils.table_to_sheet(table);
-
-/* ép toàn bộ cột C (Lớp) thành text */
 const range = XLSX.utils.decode_range(ws['!ref']);
-
 for(let R = range.s.r + 1; R <= range.e.r; ++R){
     const cell = ws['C' + (R+1)];
     if(cell){
