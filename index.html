@@ -408,7 +408,7 @@
             document.getElementById('validation-msg').textContent = "";
             
             container.innerHTML = '';
-            body.innerHTML = (q.context ? `<strong>${q.context}</strong><br><br>` : "") + q.q;
+            body.innerHTML = (q.context ? `<strong>${q.context}</strong><br><br>` : "") + (q.q || "");
 
             // Type handling
             let qtype;
@@ -484,15 +484,24 @@ else qtype = 'short';
         }
 
         function checkQuestionComplete() {
-            const q = currentQuiz[currentIndex];
-            if (!q) return false;
-            if (qtype === 'mcq') return userAnswers[q.id] !== undefined;
-            if (qtype === 'tf') {
-                const ans = userAnswers[q.id] || {};
-                return q.statements.every(s => ans[s.id] !== undefined);
-            }
-            if (qtype === 'short') return (userAnswers[q.id] || "").trim() !== "";
-            return false;
+    const q = currentQuiz[currentIndex];
+    if (!q) return false;
+
+    let qtype;
+    if (q.statements) qtype = 'tf';
+    else if (q.options) qtype = 'mcq';
+    else qtype = 'short';
+
+    if (qtype === 'mcq') return userAnswers[q.id] !== undefined;
+
+    if (qtype === 'tf') {
+        const ans = userAnswers[q.id] || {};
+        return q.statements.every(s => ans[s.id] !== undefined);
+    }
+
+    if (qtype === 'short') return (userAnswers[q.id] || "").trim() !== "";
+
+    return false;
         }
 
         function resetTimer(type) {
@@ -563,6 +572,10 @@ else qtype = 'short';
             let reviewHTML = '';
 
             currentQuiz.forEach((q, idx) => {
+               let qtype;
+if (q.statements) qtype = 'tf';
+else if (q.options) qtype = 'mcq';
+else qtype = 'short';
                 let qScore = 0;
                 let status = 'wrong';
                 let feedbackHTML = '';
@@ -680,5 +693,6 @@ window.db = db;
 </script>
 </body>
 </html>
+
 
 
