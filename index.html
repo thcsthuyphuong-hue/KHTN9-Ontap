@@ -365,14 +365,12 @@ let startTime = 0;
             
             renderQuestion();
         }
-
         function handleCheat() {
             if (!isPractice && !finished && document.visibilityState === 'hidden') {
                 document.getElementById('violation-reason').textContent = "Hệ thống phát hiện bạn đã rời khỏi trình duyệt hoặc chuyển Tab.";
                 triggerAutoSubmit();
             }
         }
-
         function handleFsChange() {
             if (!isPractice && !finished) {
                 const fsEl = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
@@ -382,7 +380,6 @@ let startTime = 0;
                 }
             }
         }
-
         function triggerAutoSubmit() {
             if (finished) return;
             document.getElementById('warning-overlay').style.display = 'flex';
@@ -391,13 +388,11 @@ let startTime = 0;
                 finishQuiz();
             }, 2500);
         }
-
         function renderQuestion() {
             const q = currentQuiz[currentIndex];
             const container = document.getElementById('answer-container');
             const body = document.getElementById('question-body');
-            const partTitle = document.getElementById('part-title');
-            
+            const partTitle = document.getElementById('part-title');   
             // Set Part Titles with Score
             if (currentIndex < 12) {
                 partTitle.textContent = "PHẦN I. TRẮC NGHIỆM KHÁCH QUAN DẠNG NHIỀU LỰA CHỌN (3 ĐIỂM)";
@@ -406,17 +401,13 @@ let startTime = 0;
             } else {
                 partTitle.textContent = "PHẦN III. TRẮC NGHIỆM KHÁCH QUAN DẠNG TRẢ LỜI NGẮN (2 ĐIỂM)";
             }
-
             document.getElementById('question-index').textContent = `Câu ${currentIndex + 1}/20`;
             document.getElementById('question-level').textContent = `Mức độ: ${q.level}`;
-            document.getElementById('validation-msg').textContent = "";
-            
+            document.getElementById('validation-msg').textContent = "";   
             container.innerHTML = '';
             body.innerHTML = (q.context ? `<strong>${q.context}</strong><br><br>` : "") + (q.q || "");
-
             // Type handling
             let qtype;
-
 if (q.statements) qtype = 'tf';
 else if (q.options) qtype = 'mcq';
 else qtype = 'short';
@@ -495,19 +486,14 @@ else qtype = 'short';
     if (q.statements) qtype = 'tf';
     else if (q.options) qtype = 'mcq';
     else qtype = 'short';
-
     if (qtype === 'mcq') return userAnswers[q.id] !== undefined;
-
     if (qtype === 'tf') {
         const ans = userAnswers[q.id] || {};
         return q.statements.every(s => ans[s.id] !== undefined);
     }
-
     if (qtype === 'short') return (userAnswers[q.id] || "").trim() !== "";
-
     return false;
         }
-
         function resetTimer(type) {
             clearInterval(timer);
             timeRemaining = (type === 'mcq') ? 90 : 120;
@@ -522,18 +508,15 @@ else qtype = 'short';
                 }
             }, 1000);
         }
-
         function updateTimerDisplay() {
             const m = Math.floor(timeRemaining / 60);
             const s = timeRemaining % 60;
             document.getElementById('timer-display').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         }
-
         function moveQuestion(step) {
             currentIndex += step;
             renderQuestion();
         }
-
         function requestSubmit() {
             if (!checkQuestionComplete()) {
                 document.getElementById('validation-msg').textContent = "Vui lòng hoàn thành câu hỏi trước khi nộp!";
@@ -541,28 +524,24 @@ else qtype = 'short';
             }
             if (confirm("Bạn có chắc chắn muốn nộp bài ngay?")) finishQuiz();
         }
-
       function finishQuiz() {
     if (finished) return;
     finished = true;
     clearInterval(timer);
-
     calculateScore();
-
-    saveResult({
-        sobaodanh: document.getElementById("input-sbd").value,
-        hovaten: document.getElementById("input-name").value,
-        lop: document.getElementById("input-class").value,
-        diem: document.getElementById("final-score").textContent,
-        time: Math.floor((Date.now() - startTime) / 1000)
+saveResult({
+    sobaodanh: document.getElementById("input-sbd").value,
+    hovaten: document.getElementById("input-name").value,
+    lop: document.getElementById("input-class").value,
+    truong: document.getElementById("input-school").value,
+diem: parseFloat(document.getElementById("final-score").textContent.split("/")[0]),
+    time: Math.floor((Date.now() - startTime) / 1000)
 });
             playSfx('submit');
-            
             // Clean up listeners
             document.removeEventListener('visibilitychange', handleCheat);
             window.removeEventListener('blur', handleCheat);
             document.removeEventListener('fullscreenchange', handleFsChange);
-
             // Exit Fullscreen
             if (document.fullscreenElement || document.webkitFullscreenElement) {
                 if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
@@ -729,6 +708,7 @@ function teacherLogin(){
 </script>
 </body>
 </html>
+
 
 
 
