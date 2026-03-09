@@ -207,6 +207,9 @@
             <div id="review-list"></div>
 
             <button class="btn-practice" onclick="location.reload()" style="margin-top: 25px; width: 100%;">LÀM BÀI MỚI</button>
+<button class="btn-secondary" onclick="openTeacherLogin()" style="margin-top:10px;width:100%">
+DÀNH CHO GIÁO VIÊN
+</button>
         </div>
     </main>
 
@@ -693,9 +696,52 @@ window.db = db;
     console.error("Lỗi lưu dữ liệu:", error);
   }
 }
+    function openTeacherLogin(){
+ document.getElementById("teacher-login").style.display="flex";
+}
+
+function closeTeacherLogin(){
+ document.getElementById("teacher-login").style.display="none";
+}
+
+function teacherLogin(){
+
+ const pass=document.getElementById("teacher-pass").value;
+
+ if(pass==="112233"){      // mật khẩu giáo viên
+     window.location.href="admin.html";
+ }
+ else{
+     document.getElementById("login-error").innerText="Sai mật khẩu!";
+ }
+
+}
 </script>
+    <div id="teacher-login" style="position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,0.7);display:none;justify-content:center;align-items:center;z-index:3000;">
+
+<div style="background:white;padding:25px;border-radius:10px;width:300px;text-align:center">
+
+<h3>Đăng nhập giáo viên</h3>
+
+<input id="teacher-pass" type="password" placeholder="Nhập mật khẩu"
+style="width:100%;padding:10px;margin-top:10px">
+
+<div style="margin-top:15px">
+
+<button onclick="teacherLogin()" class="btn-nav">Vào hệ thống</button>
+
+<button onclick="closeTeacherLogin()" class="btn-secondary">Quay lại</button>
+
+</div>
+
+<p id="login-error" style="color:red"></p>
+
+</div>
+</div>
 </body>
 </html>
+
 
 
 
