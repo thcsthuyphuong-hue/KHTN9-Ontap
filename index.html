@@ -565,7 +565,6 @@ else qtype = 'short';
                 else if (document.webkitExitFullscreen) document.webkitExitFullscreen().catch(()=>{});
             }
 
-            calculateScore();
             document.getElementById('quiz-screen').classList.remove('active');
             document.getElementById('result-screen').classList.add('active');
         }
@@ -678,7 +677,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 window.db = db;
-    async function saveResult(data) {
+    window.saveResult = async function (data) {
   try {
     await addDoc(collection(db, "ketqua"), {
       sobaodanh: data.sobaodanh,
@@ -696,6 +695,7 @@ window.db = db;
 </script>
 </body>
 </html>
+
 
 
 
