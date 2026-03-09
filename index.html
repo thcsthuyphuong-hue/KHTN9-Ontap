@@ -530,6 +530,13 @@
             if (finished) return;
             finished = true;
             clearInterval(timer);
+            saveResult({
+  sobaodanh: document.getElementById("input-sbd").value,
+  hovaten: document.getElementById("input-name").value,
+  lop: document.getElementById("input-class").value,
+  diem: score,
+  time: timeSpent
+});
             playSfx('submit');
             
             // Clean up listeners
@@ -636,5 +643,37 @@
             };
         });
     </script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "khtn9-5c1f4.firebaseapp.com",
+  projectId: "khtn9-5c1f4",
+  storageBucket: "khtn9-5c1f4.firebasestorage.app",
+  messagingSenderId: "498407772914",
+  appId: "1:498407772914:web:d20ee46cdedd817142366b",
+  measurementId: "G-VL7L30MFPM"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+window.db = db;
+    async function saveResult(data) {
+  try {
+    await addDoc(collection(db, "ketqua"), {
+      sobaodanh: data.sobaodanh,
+      hovaten: data.hovaten,
+      Lop: data.lop,
+      diem: data.diem,
+      thoigian_lambai: data.time,
+      thoigian_nopbai: serverTimestamp()
+    });
+    console.log("Đã lưu kết quả vào Firebase");
+  } catch (error) {
+    console.error("Lỗi lưu dữ liệu:", error);
+  }
+}
+</script>
 </body>
 </html>
