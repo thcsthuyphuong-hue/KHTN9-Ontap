@@ -62,32 +62,24 @@ margin-bottom:15px
 <th>Lớp</th>
 <th>Điểm</th>
 <th>Thời gian làm bài (s)</th>
+  <th>Thời gian nộp bài</th>
 </tr>
 </thead>
-
 <tbody id="table-body"></tbody>
-
 </table>
-
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
 const firebaseConfig = {
-
 apiKey: "AIzaSy...",
 authDomain: "khtn9-5c1f4.firebaseapp.com",
 projectId: "khtn9-5c1f4",
 storageBucket: "khtn9-5c1f4.firebasestorage.app",
 messagingSenderId: "498407772914",
 appId: "1:498407772914:web:d20ee46cdedd817142366b"
-
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 async function loadData(){
 
 const querySnapshot = await getDocs(collection(db,"ketqua"));
@@ -96,30 +88,29 @@ querySnapshot.forEach((doc)=>{
 
 const d = doc.data();
 
+let tgNop = "";
+
+if(d.thoigian_nopbai){
+const date = d.thoigian_nopbai.toDate();
+tgNop = date.toLocaleString("vi-VN");
+}
 const row = `
 <tr>
 <td>${d.sobaodanh}</td>
 <td>${d.hovaten}</td>
-<td>${d.lop}</td>
+<td>${d.lop || ""}</td>
 <td>${d.diem}</td>
 <td>${d.thoigian_lambai}</td>
+<td>${tgNop}</td>
 </tr>
 `;
-
 document.getElementById("table-body").innerHTML += row;
-
 });
-
 }
-
 loadData();
-
 </script>
-
 <script>
-
 function exportExcel(){
-
 const table = document.getElementById("result-table");
 
 const wb = XLSX.utils.table_to_book(table,{sheet:"Ketqua"});
@@ -127,8 +118,6 @@ const wb = XLSX.utils.table_to_book(table,{sheet:"Ketqua"});
 XLSX.writeFile(wb,"ketqua_khtn9.xlsx");
 
 }
-
 </script>
-
 </body>
 </html>
