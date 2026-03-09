@@ -111,12 +111,24 @@ loadData();
 </script>
 <script>
 function exportExcel(){
+
 const table = document.getElementById("result-table");
 
-const wb = XLSX.utils.table_to_book(table,{sheet:"Ketqua"});
+const ws = XLSX.utils.table_to_sheet(table);
+
+/* ép toàn bộ cột C (Lớp) thành text */
+const range = XLSX.utils.decode_range(ws['!ref']);
+
+for(let R = range.s.r + 1; R <= range.e.r; ++R){
+    const cell = ws['C' + (R+1)];
+    if(cell){
+        cell.t = 's';
+    }
+}
+const wb = XLSX.utils.book_new();
+XLSX.utils.book_append_sheet(wb, ws, "Ketqua");
 
 XLSX.writeFile(wb,"ketqua_khtn9.xlsx");
-
 }
 </script>
 </body>
