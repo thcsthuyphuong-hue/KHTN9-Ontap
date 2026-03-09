@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ôn tập KHTN 9 - Vật lí</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary-color: #0d47a1;
+            --secondary-color: #1976d2;
+            --accent-color: #e3f2fd;
+            --text-color: #333;
+            --white: #ffffff;
+            --danger: #d32f2f;
+            --success: #388e3c;
+            --warning: #fbc02d;
+            --wrong-bg: #ffebee;
+            --correct-bg: #e8f5e9;
+        }
+
+        * { box-sizing: border_box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; padding: 0; background-color: #f5f5f5; color: var(--text-color); height: 100vh; display: flex; flex-direction: column; }
+
+        /* HEADER */
+        header { background-color: var(--primary-color); color: var(--white); padding: 10px 15px; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 100; }
+        .header-info { display: flex; justify-content: space-between; align-items: center; }
+        .timer { font-weight: bold; font-size: 1.1rem; color: #ffeb3b; }
+
+        /* MAIN */
+        main { flex: 1; padding: 15px; overflow-y: auto; max-width: 800px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; }
+
+        /* SCREENS */
+        .screen { display: none; background: var(--white); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: fadeIn 0.3s ease-in-out; flex: 1; }
+        .screen.active { display: flex; flex-direction: column; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* WELCOME */
+        h1 { color: var(--primary-color); text-align: center; margin-bottom: 20px; font-size: 1.5rem; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; }
+        input[type="text"] { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; }
+        input[type="text"]:focus { border-color: var(--secondary-color); outline: none; }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; flex-direction: column; }
+        button { padding: 15px; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        .btn-practice { background-color: var(--secondary-color); color: white; }
+        .btn-test { background-color: var(--danger); color: white; }
+        .btn-nav { background-color: var(--primary-color); color: white; min-width: 100px; }
+        .btn-secondary { background-color: #757575; color: white; }
+
+        /* QUIZ */
+        .part-header { background-color: var(--accent-color); color: var(--primary-color); padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; text-align: center; border: 1px solid #90caf9; }
+        .question-number { font-size: 0.9rem; color: #666; margin-bottom: 5px; }
+        .question-content { font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; font-weight: 500; }
+        
+        /* MCQ Styles */
+        .options-grid { display: grid; gap: 10px; }
+        .option-card { border: 2px solid #e0e0e0; border-radius: 8px; padding: 15px; cursor: pointer; display: flex; align-items: center; transition: all 0.2s; }
+        .option-card:hover { background-color: #f5f5f5; }
+        .option-card.selected { border-color: var(--primary-color); background-color: var(--accent-color); color: var(--primary-color); font-weight: bold; }
+        .option-marker { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; flex-shrink: 0; }
+        .option-card.selected .option-marker { border-color: var(--primary-color); background-color: var(--primary-color); color: white; }
+
+        /* TF Styles */
+        .tf-container { display: flex; flex-direction: column; gap: 10px; }
+        .tf-item { background: #f9f9f9; padding: 10px 15px; border-radius: 8px; border: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        .tf-text { flex: 1; font-size: 1rem; line-height: 1.4; }
+        .tf-options { display: flex; gap: 8px; flex-shrink: 0; }
+        .tf-btn { padding: 6px 12px; border: 1px solid #ccc; border-radius: 6px; background: white; cursor: pointer; text-align: center; font-size: 0.9rem; font-weight: 600; min-width: 60px; }
+        .tf-btn.active.true { background-color: var(--success); color: white; border-color: var(--success); }
+        .tf-btn.active.false { background-color: var(--danger); color: white; border-color: var(--danger); }
+
+        /* RESULT & REVIEW STYLES */
+        .result-message { text-align: center; font-size: 1.2rem; color: var(--primary-color); margin-bottom: 20px; line-height: 1.5; background: #e3f2fd; padding: 15px; border-radius: 8px; border: 1px solid #90caf9; }
+        .score-card { text-align: center; padding: 20px; background: var(--accent-color); border-radius: 12px; margin-bottom: 20px; }
+        .score-number { font-size: 3rem; font-weight: bold; color: var(--primary-color); }
+        .rank-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; color: white; font-weight: bold; margin-top: 10px; }
+        
+        .review-item { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 20px; background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .review-item.correct { border-left: 6px solid var(--success); }
+        .review-item.wrong { border-left: 6px solid var(--danger); }
+        .review-item.partial { border-left: 6px solid var(--warning); }
+        
+        .review-question-text { font-weight: 600; font-size: 1.1rem; margin-bottom: 15px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .review-answer-section { margin-top: 10px; font-size: 1rem; }
+        
+        /* Styles for Comparison */
+        .comparison-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .user-row, .correct-row { display: flex; align-items: baseline; padding: 5px 0; }
+        .label-user { font-weight: bold; min-width: 120px; color: #555; }
+        .label-correct { font-weight: bold; min-width: 120px; color: #555; }
+        
+        .val-wrong { color: var(--danger); font-weight: bold; }
+        .val-correct { color: var(--success); font-weight: bold; }
+        
+        /* Explanation Box */
+        .explanation-box { background-color: #e8f5e9; padding: 15px; border-radius: 6px; margin-top: 10px; color: #2e7d32; border: 1px solid #c8e6c9; font-size: 0.95rem; line-height: 1.5; }
+        .explanation-title { font-weight: bold; text-decoration: underline; margin-bottom: 5px; display: block; }
+
+        /* Table for TF Review */
+        .tf-review-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.95rem; }
+        .tf-review-table th, .tf-review-table td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        .tf-review-table th { background-color: #f0f0f0; font-weight: bold; }
+        .tf-review-table td.text-left { text-align: left; }
+
+        /* FOOTER & OVERLAY */
+        footer { text-align: center; padding: 10px; font-size: 0.8rem; color: #777; background-color: #eee; }
+        .navigation-area { display: flex; justify-content: space-between; margin-top: auto; padding-top: 20px; }
+        #warning-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); color: white; display: none; justify-content: center; align-items: center; z-index: 999; flex-direction: column; text-align: center; padding: 20px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-info">
+            <div id="user-display">Học sinh: Chưa đăng nhập</div>
+            <div class="timer" id="timer-display">00:00</div>
+        </div>
+    </header>
+
+    <main>
+        <div id="welcome-screen" class="screen active">
+            <h1>ÔN TẬP KHOA HỌC TỰ NHIÊN 9</h1>
+            <div style="text-align:center; font-style: italic; margin-bottom: 15px;">Chủ đề: Quang học & Mạch điện</div>
+            <div class="form-group"><label>Họ và tên</label><input type="text" id="input-name" placeholder="Nhập họ tên..."></div>
+            <div class="form-group"><label>Số báo danh</label><input type="text" id="input-sbd" placeholder="Ví dụ: 001"></div>
+            <div class="form-group"><label>Lớp</label><input type="text" id="input-class" placeholder="Ví dụ: 9/1"></div>
+            <div class="form-group"><label>Trường</label><input type="text" id="input-school" value="THCS Thủy Phương" readonly style="background-color: #eee;"></div>
+            <div class="btn-group">
+                <button class="btn-practice" onclick="startGame('practice')">LUYỆN TẬP</button>
+                <button class="btn-test" onclick="startGame('test')">LÀM BÀI KIỂM TRA</button>
+            </div>
+            <div id="test-warning" style="color: var(--danger); font-size: 0.9rem; margin-top: 10px; text-align: center; display: none;">
+                <strong>Cảnh báo:</strong> Rời khỏi màn hình sẽ tự động nộp bài!
+            </div>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <div id="part-display" class="part-header">Phần I</div>
+            <div class="question-number" id="question-number">Câu 1</div>
+            <div class="question-content" id="question-text">Loading...</div>
+            <div id="answer-area"></div>
+            <div class="navigation-area">
+                <button class="btn-secondary" id="btn-prev" onclick="navigate(-1)">Quay lại</button>
+                <button class="btn-nav" id="btn-next" onclick="navigate(1)">Tiếp theo</button>
+                <button class="btn-test" id="btn-submit" onclick="confirmSubmit()" style="display: none;">Nộp bài</button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="screen">
+            <h1>KẾT QUẢ BÀI LÀM</h1>
+            <div id="congrats-message" class="result-message"></div>
+            
+            <div class="score-card">
+                <div>Tổng điểm</div>
+                <div class="score-number" id="final-score">0.0</div>
+                <div class="rank-badge" id="rank-badge" style="background-color: gray;">--</div>
+            </div>
+            <h3 style="color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px;">CHI TIẾT LỊCH SỬ LÀM BÀI</h3>
+            <div id="detailed-review"></div>
+            <button class="btn-practice" onclick="location.reload()" style="width: 100%; margin-top: 20px;">Làm bài mới</button>
+        </div>
+    </main>
+
+    <footer>Bản quyền thuộc về Trường THCS Thuỷ Phương, Thành phố Huế</footer>
+    <div id="warning-overlay"><h2>CẢNH BÁO VI PHẠM</h2><p>Hệ thống đang tự động nộp bài...</p></div>
+
+    <script>
+        // --- DỮ LIỆU CÂU HỎI (ĐÃ CẬP NHẬT ĐƠN VỊ VÀ KHÔNG VIẾT TẮT) ---
+        const QUESTION_BANK = {
+            mcq: [
+                { id: "TK.1", type: "mcq", level: "Biết", question: "Điểm nằm chính giữa thấu kính mà mọi tia sáng truyền qua nó đều tiếp tục truyền thẳng theo phương cũ được gọi là", options: ["tiêu điểm.", "trục chính.", "quang tâm.", "tiêu cự."], correct: 2, explain: "Quang tâm là điểm chính giữa thấu kính, mọi tia sáng qua nó đều truyền thẳng." },
+                { id: "TK.2", type: "mcq", level: "Biết", question: "Đường thẳng đi qua quang tâm và vuông góc với bề mặt thấu kính được gọi là", options: ["tiêu cự.", "trục chính.", "tiêu điểm.", "tia tới."], correct: 1, explain: "Trục chính là đường thẳng đi qua quang tâm và vuông góc với mặt thấu kính." },
+                { id: "TK.3", type: "mcq", level: "Biết", question: "Thấu kính hội tụ là loại thấu kính có", options: ["phần rìa dày hơn phần giữa.", "phần rìa mỏng hơn phần giữa.", "độ dày toàn bộ bằng nhau.", "hai mặt đều là mặt phẳng."], correct: 1, explain: "Thấu kính hội tụ có phần rìa mỏng hơn phần giữa." },
+                { id: "TK.4", type: "mcq", level: "Biết", question: "Một chùm tia sáng tới song song với trục chính của thấu kính phân kì sẽ cho chùm tia ló", options: ["hội tụ tại tiêu điểm.", "truyền thẳng.", "loe rộng ra (phân kì).", "song song."], correct: 2, explain: "Thấu kính phân kì làm chùm tia song song loe rộng ra." },
+                { id: "TK.5", type: "mcq", level: "Biết", question: "Đại lượng đặc trưng cho mức độ cản trở dòng điện của vật dẫn được gọi là", options: ["cường độ dòng điện.", "hiệu điện thế.", "điện trở.", "công suất điện."], correct: 2, explain: "Điện trở đặc trưng cho tính cản trở dòng điện." },
+                { id: "TK.6", type: "mcq", level: "Biết", question: "Trong hệ thống đơn vị đo lường SI, đơn vị của điện trở là", options: ["Ampere (A).", "Volt (V).", "Ohm (\\(\\Omega\\)).", "Watt (W)."], correct: 2, explain: "Đơn vị của điện trở là Ohm (\\(\\Omega\\))." },
+                { id: "TK.11", type: "mcq", level: "Hiểu", question: "Tia tới đi qua tiêu điểm F của thấu kính hội tụ sẽ cho tia ló", options: ["đi qua quang tâm O.", "song song với trục chính.", "truyền thẳng.", "phản xạ ngược lại."], correct: 1, explain: "Tia tới qua tiêu điểm cho tia ló song song trục chính." },
+                { id: "TK.12", type: "mcq", level: "Hiểu", question: "Tia tới có đường kéo dài đi qua tiêu điểm F' của thấu kính phân kì sẽ cho tia ló", options: ["song song với trục chính.", "đi qua quang tâm.", "loe rộng bất kì.", "vuông góc trục chính."], correct: 0, explain: "Tia tới hướng vào tiêu điểm ảnh ảo cho tia ló song song trục chính." },
+                { id: "12.1", type: "mcq", level: "Biết", question: "Đoạn mạch gồm hai điện trở thành phần mắc nối tiếp. Điện trở tương đương của đoạn mạch bằng", options: ["tổng các điện trở thành phần.", "nhỏ hơn điện trở nhỏ nhất.", "tích các điện trở.", "hiệu các điện trở."], correct: 0, explain: "Điện trở tương đương của mạch nối tiếp bằng tổng các điện trở thành phần." },
+                { id: "12.2", type: "mcq", level: "Biết", question: "Đối với đoạn mạch gồm hai điện trở mắc song song, điện trở tương đương của đoạn mạch KHÔNG thể có đặc điểm nào?", options: ["Nhỏ hơn điện trở thứ nhất.", "Nhỏ hơn điện trở thứ hai.", "Lớn hơn các điện trở thành phần.", "Nhỏ hơn điện trở nhỏ nhất."], correct: 2, explain: "Điện trở tương đương mạch song song luôn nhỏ hơn điện trở thành phần, nên không thể lớn hơn." },
+                { id: "12.3", type: "mcq", level: "Hiểu", question: "Trong một đoạn mạch mắc nối tiếp gồm hai điện trở khác nhau, đại lượng nào có giá trị như nhau tại mọi điểm?", options: ["Điện trở tương đương.", "Hiệu điện thế.", "Cường độ dòng điện.", "Điện trở thành phần."], correct: 2, explain: "Trong mạch nối tiếp, cường độ dòng điện bằng nhau tại mọi điểm." },
+                { id: "12.4", type: "mcq", level: "Hiểu", question: "Trong đoạn mạch gồm hai bóng đèn mắc song song, hệ thức nào sau đây là KHÔNG đúng khi nói về hiệu điện thế?", options: ["Bằng nhau giữa hai đầu mỗi nhánh.", "Bằng hiệu điện thế của mạch chính.", "Tỉ lệ thuận với điện trở của mỗi nhánh.", "Không phụ thuộc giá trị điện trở nhánh."], correct: 2, explain: "Hiệu điện thế mạch song song bằng nhau, không tỉ lệ thuận với điện trở." },
+                { id: "12.5", type: "mcq", level: "VD", question: "Hai điện trở \\(10 \\, \\Omega\\) và \\(20 \\, \\Omega\\) được mắc nối tiếp. Điện trở tương đương là", options: ["\\(10 \\, \\Omega\\).", "\\(20 \\, \\Omega\\).", "\\(30 \\, \\Omega\\).", "\\(6,7 \\, \\Omega\\)."], correct: 2, explain: "R<sub>tương đương</sub> = 10 + 20 = 30 \\(\\Omega\\)." },
+                { id: "12.6", type: "mcq", level: "VD", question: "Mắc song song hai điện trở \\(20 \\, \\Omega\\) và \\(30 \\, \\Omega\\). Điện trở tương đương là", options: ["\\(50 \\, \\Omega\\).", "\\(12 \\, \\Omega\\).", "\\(10 \\, \\Omega\\).", "\\(15 \\, \\Omega\\)."], correct: 1, explain: "1/R = 1/20 + 1/30 => R = 12 \\(\\Omega\\)." },
+                { id: "12.7", type: "mcq", level: "Hiểu", question: "Đoạn mạch nối tiếp, \\(U_1 = 6 \\, V\\), \\(U_2 = 4 \\, V\\). Hiệu điện thế toàn mạch là", options: ["\\(2 \\, V\\).", "\\(6 \\, V\\).", "\\(4 \\, V\\).", "\\(10 \\, V\\)."], correct: 3, explain: "U = U<sub>1</sub> + U<sub>2</sub> = 6 + 4 = 10V." },
+                { id: "12.8", type: "mcq", level: "Hiểu", question: "Mạch song song hai nhánh, \\(I_1 = 1 \\, A\\), \\(I_2 = 1,5 \\, A\\). Cường độ dòng mạch chính là", options: ["\\(0,5 \\, A\\).", "\\(1 \\, A\\).", "\\(1,5 \\, A\\).", "\\(2,5 \\, A\\)."], correct: 3, explain: "I = I<sub>1</sub> + I<sub>2</sub> = 1 + 1,5 = 2,5A." },
+                { id: "12.9", type: "mcq", level: "Biết", question: "Biểu thức tính điện trở tương đương của đoạn mạch gồm ba điện trở mắc nối tiếp là", options: ["\\(R = R_1 + R_2 + R_3\\)", "\\(R = R_1 . R_2 . R_3\\)", "\\(\\frac{1}{R} = \\frac{1}{R_1} + \\frac{1}{R_2}\\)", "R = U/I"], correct: 0, explain: "Điện trở nối tiếp bằng tổng các điện trở thành phần." },
+                { id: "12.11", type: "mcq", level: "VD", question: "\\(U = 12 \\, V\\), \\(R_1 = 4 \\, \\Omega\\), \\(R_2 = 8 \\, \\Omega\\) mắc nối tiếp. Cường độ dòng điện là", options: ["\\(1 \\, A\\).", "\\(3 \\, A\\).", "\\(1,5 \\, A\\).", "\\(0,5 \\, A\\)."], correct: 0, explain: "R = 4 + 8 = 12 \\(\\Omega\\). I = U/R = 12/12 = 1A." },
+                { id: "12.12", type: "mcq", level: "VD", question: "Hai điện trở \\(10 \\, \\Omega\\) và \\(15 \\, \\Omega\\) mắc song song vào nguồn \\(6 \\, V\\). Cường độ dòng mạch chính là", options: ["\\(1 \\, A\\).", "\\(0,24 \\, A\\).", "\\(0,4 \\, A\\).", "\\(0,6 \\, A\\)."], correct: 0, explain: "R = (10*15)/(10+15) = 6 \\(\\Omega\\). I = 6/6 = 1A." },
+                { id: "TK.21", type: "mcq", level: "VD", question: "Đặt \\(U = 12 \\, V\\) vào hai đầu \\(R = 4 \\, \\Omega\\). Cường độ dòng điện là", options: ["\\(48 \\, A\\).", "\\(3 \\, A\\).", "\\(0,33 \\, A\\).", "\\(8 \\, A\\)."], correct: 1, explain: "I = U/R = 12/4 = 3A." },
+                { id: "TK.22", type: "mcq", level: "VD", question: "Vật sáng AB cao \\(2 \\, cm\\), đặt tại \\(d=2f\\) của thấu kính hội tụ. Ảnh A'B' có độ cao là", options: ["\\(1 \\, cm\\).", "\\(2 \\, cm\\).", "\\(4 \\, cm\\).", "\\(0.5 \\, cm\\)."], correct: 1, explain: "Vật tại 2f cho ảnh thật bằng vật, nên ảnh cao 2cm." },
+                { id: "TK.23", type: "mcq", level: "VD", question: "Vật đặt cách thấu kính \\(20 \\, cm\\) cho ảnh thật bằng vật. Tiêu cự là", options: ["\\(10 \\, cm\\).", "\\(20 \\, cm\\).", "\\(40 \\, cm\\).", "\\(5 \\, cm\\)."], correct: 0, explain: "Ảnh thật bằng vật khi d = 2f = 20 => f = 10cm." },
+                { id: "TK.24", type: "mcq", level: "VD", question: "Kính lúp ghi 5x. Tiêu cự của kính là", options: ["\\(5 \\, cm\\).", "\\(50 \\, cm\\).", "\\(25 \\, cm\\).", "\\(10 \\, cm\\)."], correct: 1, explain: "G = 25/f => f = 25/5 = 5cm." },
+                { id: "12.15", type: "mcq", level: "VD", question: "3 điện trở giống nhau \\(12 \\, \\Omega\\) mắc song song. Điện trở tương đương là", options: ["\\(36 \\, \\Omega\\)", "\\(4 \\, \\Omega\\)", "\\(12 \\, \\Omega\\)", "\\(8 \\, \\Omega\\)"], correct: 1, explain: "R = 12/3 = 4 \\(\\Omega\\)." }
+            ],
+            tf: [
+                { 
+                    id: "TK.25", type: "tf", level: "Hiểu",
+                    context: "Xét một vật sáng AB đặt vuông góc trục chính thấu kính hội tụ tiêu cự f.",
+                    statements: [
+                        { id: "a", text: "Tia tới song song trục chính thì tia ló đi qua tiêu điểm ảnh F'.", correct: true },
+                        { id: "b", text: "Nếu vật nằm trong khoảng tiêu cự, ta KHÔNG thể quan sát được ảnh.", correct: false },
+                        { id: "c", text: "Để dựng ảnh, có thể dùng tia tới qua quang tâm O và tia song song.", correct: true },
+                        { id: "d", text: "Ảnh tạo bởi thấu kính hội tụ luôn là ảnh thật ngược chiều.", correct: false }
+                    ],
+                    explain: "a: Đúng (tính chất); b: Sai (vì mắt có thể nhìn thấy ảnh ảo); c: Đúng; d: Sai (có thể là ảnh ảo)." 
+                },
+                { 
+                    id: "TK.26", type: "tf", level: "Hiểu",
+                    context: "Đoạn mạch có điện trở R không đổi, hiệu điện thế U.",
+                    statements: [
+                        { id: "a", text: "Cường độ dòng điện I tỉ lệ thuận với hiệu điện thế U.", correct: true },
+                        { id: "b", text: "Khi R tăng 2 lần và U giữ nguyên thì I tăng 2 lần.", correct: false },
+                        { id: "c", text: "Đơn vị của cường độ dòng điện là Volt.", correct: false },
+                        { id: "d", text: "Công thức định luật Ohm là \\(I = \\frac{U}{R}\\).", correct: true }
+                    ],
+                    explain: "I tỉ lệ thuận U, tỉ lệ nghịch R. Đơn vị I là Ampere." 
+                },
+                { 
+                    id: "TK.28", type: "tf", level: "Hiểu",
+                    context: "Thấu kính phân kì tiêu cự \\(f = 15 \\, cm\\). Vật AB đặt vuông góc trục chính.",
+                    statements: [
+                        { id: "a", text: "Tia tới song song trục chính cho tia ló có đường kéo dài qua tiêu điểm.", correct: true },
+                        { id: "b", text: "Thấu kính phân kì có thể tạo ảnh thật nếu vật đặt rất xa.", correct: false },
+                        { id: "c", text: "Ảnh của vật thật qua thấu kính phân kì luôn là ảnh ảo, cùng chiều, nhỏ hơn vật.", correct: true },
+                        { id: "d", text: "Khi đưa vật lại gần thấu kính, ảnh ảo sẽ càng nhỏ đi.", correct: false }
+                    ],
+                    explain: "Thấu kính phân kì luôn cho ảnh ảo. Vật càng gần thì ảnh ảo càng lớn (nhưng vẫn nhỏ hơn vật)." 
+                },
+                { 
+                    id: "TK.29", type: "tf", level: "Vận dụng",
+                    context: "Đồ thị I theo U của R<sub>1</sub> và R<sub>2</sub> đi qua gốc tọa độ, đường R<sub>1</sub> dốc hơn R<sub>2</sub>.",
+                    statements: [
+                        { id: "a", text: "Với cùng U, cường độ dòng qua R<sub>1</sub> lớn hơn R<sub>2</sub>.", correct: true },
+                        { id: "b", text: "Điện trở R<sub>1</sub> có giá trị lớn hơn R<sub>2</sub>.", correct: false },
+                        { id: "c", text: "Nếu U = 0 thì I qua cả hai đều bằng 0.", correct: true },
+                        { id: "d", text: "Tỉ số U/I đối với mỗi điện trở là không đổi.", correct: true }
+                    ],
+                    explain: "Đường dốc hơn -> I lớn hơn -> R nhỏ hơn." 
+                },
+                { 
+                    id: "12.25", type: "tf", level: "Hiểu",
+                    context: "Đoạn mạch gồm 3 điện trở mắc nối tiếp.",
+                    statements: [
+                        { id: "a", text: "Cường độ dòng điện qua ba điện trở luôn bằng nhau.", correct: true },
+                        { id: "b", text: "Điện trở tương đương của mạch nhỏ hơn điện trở thành phần lớn nhất.", correct: false },
+                        { id: "c", text: "Hiệu điện thế toàn mạch bằng tổng U thành phần.", correct: true },
+                        { id: "d", text: "Nếu gỡ bỏ một điện trở, mạch vẫn hoạt động bình thường.", correct: false }
+                    ],
+                    explain: "Nối tiếp: I bằng nhau, U cộng, R cộng. Hở mạch thì ngừng hoạt động." 
+                },
+                { 
+                    id: "12.26", type: "tf", level: "VD",
+                    context: "Hai điện trở R<sub>1</sub>, R<sub>2</sub> mắc song song. Biết R<sub>1</sub> > R<sub>2</sub>.",
+                    statements: [
+                        { id: "a", text: "Hiệu điện thế U<sub>1</sub> lớn hơn U<sub>2</sub>.", correct: false },
+                        { id: "b", text: "Điện trở tương đương nhỏ hơn R<sub>2</sub>.", correct: true },
+                        { id: "c", text: "Cường độ dòng điện qua R<sub>1</sub> nhỏ hơn qua R<sub>2</sub>.", correct: true },
+                        { id: "d", text: "Nếu mắc thêm R<sub>3</sub> song song, dòng qua R<sub>1</sub> sẽ giảm đi.", correct: false }
+                    ],
+                    explain: "Song song: U bằng nhau. R càng lớn I càng nhỏ. R<sub>tương đương</sub> < R<sub>nhỏ nhất</sub>." 
+                },
+                { 
+                    id: "12.28", type: "tf", level: "VD",
+                    context: "Đèn \\(6V-0,5A\\) mắc nối tiếp biến trở vào nguồn \\(9 \\, V\\).",
+                    statements: [
+                        { id: "a", text: "Điện trở đèn là \\(12 \\, \\Omega\\).", correct: true },
+                        { id: "b", text: "Để đèn sáng bình thường, biến trở phải là \\(6 \\, \\Omega\\).", correct: true },
+                        { id: "c", text: "Nếu tăng giá trị biến trở, dòng điện sẽ tăng.", correct: false },
+                        { id: "d", text: "Độ sáng của đèn phụ thuộc vào biến trở.", correct: true }
+                    ],
+                    explain: "R<sub>đèn</sub> = 6/0,5 = 12 \\(\\Omega\\). U<sub>biến</sub> = 9-6=3V -> R<sub>biến</sub> = 3/0,5=6 \\(\\Omega\\)." 
+                },
+                { 
+                    id: "12.29", type: "tf", level: "VD",
+                    context: "Ba điện trở giống nhau \\(R = 30 \\, \\Omega\\).",
+                    statements: [
+                        { id: "a", text: "Mắc nối tiếp 3 trở thì R tương đương lớn nhất.", correct: true },
+                        { id: "b", text: "Ghép 3 trở song song thì R tương đương là \\(10 \\, \\Omega\\).", correct: true },
+                        { id: "c", text: "Ghép (2 song song) nối tiếp 1 thì \\(R = 45 \\, \\Omega\\).", correct: true },
+                        { id: "d", text: "Ghép song song thì dòng mạch chính nhỏ hơn dòng nhánh.", correct: false }
+                    ],
+                    explain: "Song song R = 30/3 = 10. (30//30)+30 = 15+30=45." 
+                }
+            ],
+            short: [
+                { id: "TK.33", type: "short", level: "Vận dụng", question: "Một bóng đèn có điện trở \\(12 \\, \\Omega\\) mắc vào nguồn \\(6 \\, V\\). Cường độ dòng điện qua đèn là bao nhiêu Ampe?", answer: ["0.5", "0,5"], explain: "I = U/R = 6/12 = 0,5 A." },
+                { id: "TK.34", type: "short", level: "Vận dụng", question: "Đặt \\(U=12 \\, V\\) thì \\(I=0,2 \\, A\\). Điện trở dây dẫn là bao nhiêu Ohm?", answer: ["60"], explain: "R = U/I = 12/0,2 = 60 Ohm." },
+                { id: "TK.35", type: "short", level: "Vận dụng", question: "Người dùng kính lúp 2.5X. Tiêu cự của kính là bao nhiêu cm?", answer: ["10"], explain: "f = 25/G = 25/2.5 = 10 cm." },
+                { id: "TK.36", type: "short", level: "Vận dụng", question: "Điện trở \\(10 \\, \\Omega\\) chịu dòng tối đa \\(2 \\, A\\). Hiệu điện thế tối đa là bao nhiêu Volt?", answer: ["20"], explain: "U = I.R = 2.10 = 20 V." },
+                { id: "12.33", type: "short", level: "Vận dụng", question: "Hai điện trở \\(40 \\, \\Omega\\) và \\(60 \\, \\Omega\\) mắc nối tiếp. Tính điện trở tương đương (\\(\\Omega\\)).", answer: ["100"], explain: "R = 40 + 60 = 100." },
+                { id: "12.35", type: "short", level: "Vận dụng", question: "4 điện trở giống nhau \\(20 \\, \\Omega\\) mắc song song. Tính điện trở tương đương (\\(\\Omega\\)).", answer: ["5"], explain: "R = 20/4 = 5." },
+                { id: "12.36", type: "short", level: "Vận dụng", question: "R<sub>1</sub> song song R<sub>2</sub>. \\(R_1 = 20 \\, \\Omega\\), \\(R_2 = 30 \\, \\Omega\\). Dòng qua R<sub>1</sub> là \\(0,5 \\, A\\). Tính dòng mạch chính (A).", answer: ["0.83", "0,83"], explain: "U = 0,5 * 20 = 10V. I<sub>2</sub> = 10/30 = 0.33A. I = 0,5 + 0,33 = 0.83A." },
+                { id: "12.37", type: "short", level: "Vận dụng", question: "Mắc song song R<sub>1</sub> với \\(100 \\, \\Omega\\) để được \\(20 \\, \\Omega\\). R<sub>1</sub> là bao nhiêu?", answer: ["25"], explain: "1/20 = 1/R<sub>1</sub> + 1/100 => R<sub>1</sub> = 25." }
+            ]
+        };
+
+        // --- VARIABLES ---
+        let currentQuiz = [];
+        let currentIndex = 0;
+        let userAnswers = {};
+        let mode = 'practice';
+        let timerInterval;
+        let timeRemaining = 0;
+        let isSubmitted = false;
+
+        function shuffle(array) {
+            let curId = array.length;
+            while (0 !== curId) {
+                let randId = Math.floor(Math.random() * curId);
+                curId -= 1;
+                [array[curId], array[randId]] = [array[randId], array[curId]];
+            }
+            return array;
+        }
+
+        // --- APP LOGIC ---
+
+        function startGame(selectedMode) {
+            const name = document.getElementById('input-name').value.trim();
+            if (!name) { alert("Vui lòng nhập họ tên!"); return; }
+            if (selectedMode === 'test') {
+                if (!confirm("CẢNH BÁO: Chế độ kiểm tra sẽ tự nộp bài nếu bạn rời màn hình!")) return;
+                document.getElementById('test-warning').style.display = 'block';
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+                window.addEventListener('blur', handleBlur);
+            }
+            mode = selectedMode;
+            document.getElementById('user-display').textContent = `Học sinh: ${name}`;
+            generateQuiz();
+            document.getElementById('welcome-screen').classList.remove('active');
+            document.getElementById('quiz-screen').classList.add('active');
+            renderQuestion();
+        }
+
+        function generateQuiz() {
+            const mcqSet = shuffle([...QUESTION_BANK.mcq]).slice(0, 12);
+            const tfSet = shuffle([...QUESTION_BANK.tf]).slice(0, 4);
+            const shortSet = shuffle([...QUESTION_BANK.short]).slice(0, 4);
+            
+            mcqSet.forEach(q => {
+                q.shuffledOptions = shuffle(q.options.map((opt, i) => ({text: opt, originalIndex: i})));
+            });
+            tfSet.forEach(q => {
+                q.shuffledStatements = shuffle([...q.statements]);
+            });
+            
+            currentQuiz = [...mcqSet, ...tfSet, ...shortSet];
+            currentIndex = 0;
+        }
+
+        function getTimerForType(type) {
+            if (type === 'mcq') return 90;
+            if (type === 'tf' || type === 'short') return 120;
+            return 90;
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            const q = currentQuiz[currentIndex];
+            timeRemaining = getTimerForType(q.type);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                if (timeRemaining <= 0) clearInterval(timerInterval);
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            const s = (timeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').textContent = `${m}:${s}`;
+        }
+
+        function renderQuestion() {
+            if (isSubmitted) return;
+            const q = currentQuiz[currentIndex];
+            const container = document.getElementById('answer-area');
+            const textEl = document.getElementById('question-text');
+            const partEl = document.getElementById('part-display');
+            const numEl = document.getElementById('question-number');
+
+            if (currentIndex < 12) {
+                partEl.textContent = "Phần I. Trắc nghiệm khách quan nhiều lựa chọn (3 điểm)";
+            } else if (currentIndex < 16) {
+                partEl.textContent = "Phần II. Trắc nghiệm khách quan dạng đúng / sai (2 điểm)";
+            } else {
+                partEl.textContent = "Phần III. Trắc nghiệm khách quan dạng trả lời ngắn (2 điểm)";
+            }
+            
+            numEl.textContent = `Câu ${currentIndex + 1}/20`;
+            let contentHTML = q.context ? `<strong>${q.context}</strong><br><br>` : "";
+            contentHTML += q.question;
+            textEl.innerHTML = contentHTML;
+            container.innerHTML = '';
+
+            if (q.type === 'mcq') {
+                const div = document.createElement('div');
+                div.className = 'options-grid';
+                q.shuffledOptions.forEach((opt, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'option-card';
+                    if (userAnswers[q.id] === opt.originalIndex) card.classList.add('selected');
+                    card.innerHTML = `<div class="option-marker">${String.fromCharCode(65 + idx)}</div><div>${opt.text}</div>`;
+                    card.onclick = () => { userAnswers[q.id] = opt.originalIndex; renderQuestion(); };
+                    div.appendChild(card);
+                });
+                container.appendChild(div);
+            } 
+            else if (q.type === 'tf') {
+                const div = document.createElement('div');
+                div.className = 'tf-container';
+                q.shuffledStatements.forEach((stmt, idx) => {
+                    const saved = userAnswers[q.id] || {};
+                    const val = saved[stmt.id];
+                    const item = document.createElement('div');
+                    item.className = 'tf-item';
+                    item.innerHTML = `
+                        <div class="tf-text"><strong>${String.fromCharCode(97 + idx)})</strong> ${stmt.text}</div>
+                        <div class="tf-options">
+                            <div class="tf-btn ${val === true ? 'active true' : ''}" onclick="selectTF('${q.id}', '${stmt.id}', true)">Đúng</div>
+                            <div class="tf-btn ${val === false ? 'active false' : ''}" onclick="selectTF('${q.id}', '${stmt.id}', false)">Sai</div>
+                        </div>
+                    `;
+                    div.appendChild(item);
+                });
+                container.appendChild(div);
+            }
+            else if (q.type === 'short') {
+                const inp = document.createElement('input');
+                inp.type = 'text';
+                inp.placeholder = 'Nhập đáp án...';
+                inp.value = userAnswers[q.id] || '';
+                inp.oninput = (e) => userAnswers[q.id] = e.target.value;
+                container.appendChild(inp);
+            }
+
+            document.getElementById('btn-prev').style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
+            if (currentIndex === 19) {
+                document.getElementById('btn-next').style.display = 'none';
+                document.getElementById('btn-submit').style.display = 'block';
+            } else {
+                document.getElementById('btn-next').style.display = 'block';
+                document.getElementById('btn-submit').style.display = 'none';
+            }
+            MathJax.typeset();
+            startTimer();
+        }
+
+        function selectTF(qid, stmtId, val) {
+            if (!userAnswers[qid]) userAnswers[qid] = {};
+            userAnswers[qid][stmtId] = val;
+            renderQuestion();
+        }
+
+        function navigate(dir) { currentIndex += dir; renderQuestion(); }
+        function confirmSubmit() { if (confirm("Nộp bài ngay?")) finishQuiz(); }
+        function handleVisibilityChange() { if (mode === 'test' && !isSubmitted && document.visibilityState === 'hidden') triggerCheat(); }
+        function handleBlur() { if (mode === 'test' && !isSubmitted) triggerCheat(); }
+        function triggerCheat() {
+            isSubmitted = true;
+            document.getElementById('warning-overlay').style.display = 'flex';
+            setTimeout(() => { document.getElementById('warning-overlay').style.display = 'none'; finishQuiz(true); }, 2000);
+        }
+
+        // --- SCORING & REVIEW ---
+        function finishQuiz() {
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('blur', handleBlur);
+
+            // Lấy thông tin học sinh
+            const sName = document.getElementById('input-name').value;
+            const sSbd = document.getElementById('input-sbd').value;
+            const sClass = document.getElementById('input-class').value;
+
+            let totalScore = 0;
+            let reviewHTML = "";
+
+            currentQuiz.forEach((q, idx) => {
+                let questionScore = 0;
+                let statusClass = "wrong";
+                let reviewDetail = "";
+
+                if (q.type === 'mcq') {
+                    const userPick = userAnswers[q.id];
+                    const isCorrect = userPick === q.correct;
+                    if (isCorrect) { questionScore = 0.25; statusClass = "correct"; }
+                    
+                    const userText = userPick !== undefined ? q.options[userPick] : "Chưa chọn";
+                    const correctText = q.options[q.correct];
+                    
+                    reviewDetail = `
+                        <div class="comparison-container">
+                            <div class="user-row">
+                                <span class="label-user">Bạn chọn:</span>
+                                <span class="${isCorrect ? 'val-correct' : 'val-wrong'}">${userText}</span>
+                            </div>
+                            <div class="correct-row">
+                                <span class="label-correct">Đáp án đúng:</span>
+                                <span class="val-correct">${correctText}</span>
+                            </div>
+                        </div>
+                        <div class="explanation-box"><span class="explanation-title">Giải thích:</span> ${q.explain}</div>
+                    `;
+                }
+                else if (q.type === 'tf') {
+                    let correctCount = 0;
+                    const userObj = userAnswers[q.id] || {};
+                    let tableRows = "";
+                    
+                    q.statements.forEach((stmt, sIdx) => {
+                        const uVal = userObj[stmt.id];
+                        const cVal = stmt.correct;
+                        const isRight = uVal === cVal;
+                        if (isRight) correctCount++;
+                        
+                        const uStr = uVal === true ? "Đúng" : (uVal === false ? "Sai" : "Chưa chọn");
+                        const cStr = cVal ? "Đúng" : "Sai";
+                        const colorClass = isRight ? "val-correct" : "val-wrong";
+                        
+                        tableRows += `<tr>
+                            <td>${String.fromCharCode(97 + sIdx)}</td>
+                            <td class="text-left">${stmt.text}</td>
+                            <td class="${colorClass}">${uStr}</td>
+                            <td class="val-correct">${cStr}</td>
+                        </tr>`;
+                    });
+                    
+                    if (correctCount === 1) questionScore = 0.0625;
+                    if (correctCount === 2) questionScore = 0.125;
+                    if (correctCount === 3) questionScore = 0.25;
+                    if (correctCount === 4) questionScore = 0.5;
+                    
+                    if (correctCount === 4) statusClass = "correct";
+                    else if (correctCount > 0) statusClass = "partial";
+
+                    reviewDetail = `
+                        <div style="margin-bottom: 10px; font-weight: bold;">Kết quả: Đúng ${correctCount}/4 ý (Đạt ${questionScore} điểm)</div>
+                        <table class="tf-review-table">
+                            <thead><tr><th>Ý</th><th>Nội dung</th><th>Bạn chọn</th><th>Đáp án</th></tr></thead>
+                            <tbody>${tableRows}</tbody>
+                        </table>
+                        <div class="explanation-box"><span class="explanation-title">Giải thích:</span> ${q.explain}</div>
+                    `;
+                }
+                else if (q.type === 'short') {
+                    const uVal = (userAnswers[q.id] || "").trim().toLowerCase().replace(',', '.');
+                    let isCorrect = q.answer.some(ans => ans.toLowerCase().replace(',', '.') === uVal);
+                    if (isCorrect) { questionScore = 0.5; statusClass = "correct"; }
+                    
+                    reviewDetail = `
+                         <div class="comparison-container">
+                            <div class="user-row">
+                                <span class="label-user">Bạn trả lời:</span>
+                                <span class="${isCorrect ? 'val-correct' : 'val-wrong'}">${userAnswers[q.id] || "(Trống)"}</span>
+                            </div>
+                            <div class="correct-row">
+                                <span class="label-correct">Đáp án:</span>
+                                <span class="val-correct">${q.answer.join(" hoặc ")}</span>
+                            </div>
+                        </div>
+                        <div class="explanation-box"><span class="explanation-title">Giải thích:</span> ${q.explain}</div>
+                    `;
+                }
+
+                totalScore += questionScore;
+                
+                reviewHTML += `
+                    <div class="review-item ${statusClass}">
+                        <div class="review-question-text">Câu ${idx + 1}: ${q.context ? q.context + "<br>" : ""}${q.question}</div>
+                        <div class="review-answer-section">${reviewDetail}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('quiz-screen').classList.remove('active');
+            document.getElementById('result-screen').classList.add('active');
+            
+            const final = Math.round(totalScore * 10) / 10;
+            document.getElementById('final-score').textContent = final + "/7.0";
+            
+            let r = "", c = "";
+            if (final >= 6) { r = "XUẤT SẮC"; c = "#2e7d32"; }
+            else if (final >= 5) { r = "GIỎI"; c = "#1565c0"; }
+            else if (final >= 4) { r = "KHÁ"; c = "#f9a825"; }
+            else if (final >= 3) { r = "ĐẠT"; c = "#ef6c00"; }
+            else { r = "CHƯA ĐẠT"; c = "#c62828"; }
+            const rb = document.getElementById('rank-badge');
+            rb.textContent = r; rb.style.backgroundColor = c;
+
+            // HIỂN THỊ THÔNG BÁO CHÚC MỪNG CÁ NHÂN HÓA
+            document.getElementById('congrats-message').innerHTML = 
+                `Chúc mừng em <b>${sName}</b> - SBD: <b>${sSbd}</b> - Lớp: <b>${sClass}</b> đã hoàn thành <b>${r}</b> bài kiểm tra`;
+            
+            document.getElementById('detailed-review').innerHTML = reviewHTML;
+            MathJax.typeset();
+        }
+    </script>
+</body>
+</html>
