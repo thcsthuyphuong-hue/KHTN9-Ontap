@@ -269,7 +269,7 @@
                 { id: "TK.21", level: "VD", q: "Đặt một hiệu điện thế $U = 12 \\, V$ vào hai đầu một điện trở $R = 4 \\, \\Omega$. Cường độ dòng điện chạy qua điện trở là", options: ["$48 \\, A$.", "$3 \\, A$.", "$0,33 \\, A$.", "$8 \\, A$."], answer: 1, exp: "$I = 12 / 4 = 3 \\, A$." },
                 { id: "TK.22", level: "VD", q: "Một vật sáng AB cao $2 \\, cm$ đặt vuông góc với trục chính của thấu kính hội tụ có $f = 10 \\, cm$. Nếu vật cách thấu kính $20 \\, cm$ ($d = 2f$) thì ảnh A'B' có độ cao là", options: ["$1 \\, cm$.", "$2 \\, cm$.", "$4 \\, cm$.", "$0,5 \\, cm$."], answer: 1, exp: "Khi $d = 2f$, ảnh thật ngược chiều và bằng vật." },
                 { id: "TK.23", level: "VD", q: "Một vật đặt trước thấu kính hội tụ cho ảnh thật ngược chiều và bằng vật. Biết vật cách thấu kính $20 \\, cm$. Tiêu cự của thấu kính là", options: ["$10 \\, cm$.", "$20 \\, cm$.", "$40 \\, cm$.", "$5 \\, cm$."], answer: 0, exp: "$d = 2f = 20 \\Rightarrow f = 10 \\, cm$." },
-                { id: "TK.24", level: "VD", q: "Trên một kính lúp có ghi $5X$. Tiêu cự $f$ của kính lúp này là", options: ["$5 \\, cm$.", "$50 \\, cm$.", "$25 \\, cm$.", "$10 \\, cm$."], answer: 2, exp: "$G = 25/f \\Rightarrow f = 5 \\, cm$." }
+                { id: "TK.24", level: "VD", q: "Trên một kính lúp có ghi $5X$. Tiêu cự $f$ của kính lúp này là", options: ["$5 \\, cm$.", "$50 \\, cm$.", "$25 \\, cm$.", "$10 \\, cm$."], answer: 1, exp: "$G = 25/f \\Rightarrow f = 5 \\, cm$." }
             ],
             tf: [
                 { id: "TK.25", level: "Hiểu", context: "Xét một vật sáng $AB$ đặt vuông góc với trục chính của một thấu kính hội tụ có tiêu cự $f$.", statements: [
@@ -313,7 +313,7 @@
         let timeRemaining = 0;
         let isPractice = true;
         let finished = false;
-
+let startTime = 0;
       function shuffle(arr){
     for(let i = arr.length - 1; i > 0; i--){
         const j = Math.floor(Math.random() * (i + 1));
@@ -323,6 +323,7 @@
 }
 
         async function initGame(mode) {
+            startTime = Date.now();  
             const name = document.getElementById('input-name').value.trim();
             if (!name) { alert("Vui lòng nhập họ tên!"); return; }
             
@@ -550,7 +551,7 @@ else qtype = 'short';
         hovaten: document.getElementById("input-name").value,
         lop: document.getElementById("input-class").value,
         diem: document.getElementById("final-score").textContent,
-        time: 0
+        time: Math.floor((Date.now() - startTime) / 1000)
 });
             playSfx('submit');
             
@@ -695,6 +696,7 @@ window.db = db;
 </script>
 </body>
 </html>
+
 
 
 
