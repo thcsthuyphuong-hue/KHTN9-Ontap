@@ -584,8 +584,7 @@ else qtype = 'short';
     finished = true;
     clearInterval(timer);
     calculateScore();
-const finalScore = parseFloat(document.getElementById("final-score").textContent)
-
+document.getElementById('final-score').textContent = final.toFixed(1);
           await saveResult({
     sobaodanh: document.getElementById("input-sbd").value,
     hovaten: document.getElementById("input-name").value,
@@ -805,43 +804,30 @@ function teacherLogin(){
  }
 }
 </script>
-
+<script>
 /* =========================
    PRO MAX SECURITY SYSTEM
 ========================= */
-
 document.addEventListener("contextmenu",e=>{
 if(!isPractice) e.preventDefault()
 })
-
-document.addEventListener("copy",e=>{
+ocument.addEventListener("copy",e=>{
 if(!isPractice){
 e.preventDefault()
 alert("Không được sao chép đề!")
 }
 })
-
 let devtools=false
-
 setInterval(()=>{
 if((window.outerWidth-window.innerWidth>200) || 
    (window.outerHeight-window.innerHeight>200)){
-
 devtools=true
-
 if(!isPractice && !finished){
-
 document.getElementById('violation-reason').textContent="Phát hiện mở DevTools"
-
 triggerAutoSubmit()
-
 }
-
 }
-
 },1000)
-
-
 /* =========================
    RANDOM EXAM ENGINE
 ========================= */
@@ -1066,6 +1052,7 @@ triggerAutoSubmit()
 </script>
 </body>
 </html>
+
 
 
 
