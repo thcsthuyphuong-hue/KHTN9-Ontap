@@ -404,9 +404,9 @@ return copy
 })
 let shorts = shuffle([...BANK.short]).slice(0,4)
 currentQuiz = [
-...shuffle(mcqs),
-...shuffle(tfs),
-...shuffle(shorts)
+...(mcqs),
+...(tfs),
+...(shorts)
 ]
 // save history
 let newHistory=[currentQuiz.map(q=>q.id),...(JSON.parse(localStorage.getItem("khtn9_history")||"[]"))]
@@ -589,7 +589,8 @@ await saveResult({
     hovaten: document.getElementById("input-name").value,
     lop: document.getElementById("input-class").value,
     truong: document.getElementById("input-school").value,
-diem: parseFloat(document.getElementById("final-score").textContent),
+document.getElementById('final-score').textContent = final.toFixed(1);
+document.getElementById('final-score').dataset.max = "7.0";
     time: Math.floor((Date.now() - startTime) / 1000)
 });
             playSfx('submit');
@@ -729,6 +730,60 @@ const db = getFirestore(app);
 window.db = db;
 
 window.saveResult = async function (data) {
+
+  try {
+
+    // lưu kết quả
+    await addDoc(collection(db, "ketqua"), {
+      sobaodanh: data.sobaodanh,
+      hovaten: data.hovaten,
+      lop: data.lop,
+      diem: data.diem,
+      thoigian_lambai: data.time,
+      thoigian_nopbai: serverTimestamp()
+    });
+
+    console.log("Đã lưu kết quả vào Firebase");
+
+    // ====== TÍNH XẾP HẠNG ======
+
+    const snapshot = await getDocs(collection(db,"ketqua"))
+
+    let arr=[]
+
+    snapshot.forEach(d=>arr.push(d.data()))
+
+    // sắp xếp theo điểm rồi thời gian
+    arr.sort((a,b)=>{
+
+      if(b.diem!==a.diem) return b.diem-a.diem
+
+      return a.thoigian_lambai-b.thoigian_lambai
+
+    })
+
+    // tìm vị trí
+    let rank = arr.findIndex(x=>
+
+      x.diem==data.diem &&
+
+      x.thoigian_lambai==data.time
+
+    ) + 1
+
+    let total = arr.length
+
+    // hiển thị
+    const badge = document.getElementById("rank-badge")
+
+    badge.innerHTML += `
+    <div style="margin-top:8px;font-size:1rem">
+    Xếp hạng: <b>${rank}</b> / ${total}
+    </div>
+  } catch (error) {
+    console.error("Lỗi lưu dữ liệu:", error)=
+  }
+}
   try {
     await addDoc(collection(db, "ketqua"), {
       sobaodanh: data.sobaodanh,
@@ -794,8 +849,8 @@ alert("Không được sao chép đề!")
 let devtools=false
 
 setInterval(()=>{
-
-if(window.outerWidth-window.innerWidth>160){
+if((window.outerWidth-window.innerWidth>200) || 
+   (window.outerHeight-window.innerHeight>200)){
 
 devtools=true
 
@@ -989,8 +1044,10 @@ let arr=[]
 
 snapshot.forEach(d=>arr.push(d.data()))
 
-arr.sort((a,b)=>b.diem-a.diem)
-
+arr.sort((a,b)=>{
+if(b.diem!==a.diem) return b.diem-a.diem
+return a.thoigian_lambai-b.thoigian_lambai
+})
 console.log("TOP 10",arr.slice(0,10))
 
 }
@@ -1034,6 +1091,7 @@ triggerAutoSubmit()
 </script>
 </body>
 </html>
+
 
 
 
