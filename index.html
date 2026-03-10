@@ -398,12 +398,9 @@ return q
 
 // TF shuffle
 let tfs = shuffle([...BANK.tf]).slice(0,4).map(q=>{
-let tfs = shuffle([...BANK.tf]).slice(0,4).map(q=>{
 let copy = {...q}
 copy.statements = shuffle([...q.statements])
 return copy
-})
-return q
 })
 let shorts = shuffle([...BANK.short]).slice(0,4)
 currentQuiz = [
@@ -703,24 +700,51 @@ else qtype = 'short';
         });
     </script>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+serverTimestamp,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "khtn9-5c1f4.firebaseapp.com",
-  projectId: "khtn9-5c1f4",
-  storageBucket: "khtn9-5c1f4.firebasestorage.app",
-  messagingSenderId: "498407772914",
-  appId: "1:498407772914:web:d20ee46cdedd817142366b",
-  measurementId: "G-VL7L30MFPM"
+  apiKey: "...",
+  authDomain: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "...",
+  measurementId: "..."
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
 window.db = db;
-    window.saveResult = async function (data) {
+
+window.saveResult = async function (data) {
   try {
     await addDoc(collection(db, "ketqua"), {
+      sobaodanh: data.sobaodanh,
+      hovaten: data.hovaten,
+      lop: data.lop,
+      diem: data.diem,
+      thoigian_lambai: data.time,
+      thoigian_nopbai: serverTimestamp()
+    });
+    console.log("Đã lưu kết quả vào Firebase");
+  } catch (error) {
+    console.error("Lỗi lưu dữ liệu:", error);
+  }
+};
+
+</script>
       sobaodanh: data.sobaodanh,
       hovaten: data.hovaten,
       lop: data.lop,
@@ -945,16 +969,6 @@ return exam
    OVERRIDE INITGAME
 ========================= */
 
-const originalInitGame=initGame
-
-initGame=function(mode){
-
-currentQuiz=buildExam()
-
-originalInitGame(mode)
-
-}
-
 
 /* =========================
    FAST SUBMIT DETECTION
@@ -1014,7 +1028,6 @@ console.log("Điểm TB",avg)
 
 }
 
-
 /* =========================
    RESIZE DETECTION
 ========================= */
@@ -1035,6 +1048,7 @@ triggerAutoSubmit()
 </script>
 </body>
 </html>
+
 
 
 
