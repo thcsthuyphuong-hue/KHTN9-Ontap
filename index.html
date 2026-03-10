@@ -662,10 +662,9 @@ else qtype = 'short';
                 totalPoints += qScore;
                 reviewHTML += `<div class="review-item ${status}"><div class="review-q-text">Câu ${idx+1}. ${q.context ? q.context + ' ' : ''}${q.q}</div>${feedbackHTML}<div class="explain-box"><b>Giải thích chi tiết:</b> ${q.exp}</div></div>`;
             });
+finalScore = Math.round(totalPoints * 10) / 10;
+document.getElementById('final-score').textContent = finalScore.toFixed(1) + "/7.0";
 
-            const final = Math.round(totalPoints * 10) / 10;
-            document.getElementById('final-score').textContent = final.toFixed(1) + "/7.0";
-            
             let rank = "CHƯA ĐẠT", color = "#c62828";
             if (final >= 6) { rank = "XUẤT SẮC"; color = "#2e7d32"; }
             else if (final >= 5) { rank = "GIỎI"; color = "#1565c0"; }
@@ -1020,4 +1019,5 @@ lastWidth = window.innerWidth
 </script>
 </body>
 </html>
+
 
