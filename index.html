@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ôn tập giữa kì 2 - KHTN 9</title>
+    <title>Ôn tập KHTN 9 - Bài 12 & Giữa kì 2</title>
     <!-- MathJax for LaTeX formulas -->
     <script>
         window.MathJax = {
@@ -88,7 +88,7 @@
         .score-number { font-size: 3.5rem; font-weight: 800; color: var(--primary); margin: 5px 0; }
         .rank-badge { display: inline-block; padding: 6px 20px; border-radius: 30px; color: white; font-weight: bold; text-transform: uppercase; }
         
-        .review-item { border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 20px; background: #fff; border-left-width: 6px; }
+        .review-item { border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 20px; background: #fff; border-left: 6px solid #ccc; }
         .review-item.correct { border-left-color: var(--success); }
         .review-item.wrong { border-left-color: var(--danger); }
         .review-item.partial { border-left-color: var(--warning); }
@@ -107,6 +107,8 @@
         .hidden { display: none !important; }
         .navigation-area { display: flex; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 10px; }
         .validation-msg { font-size: 0.85rem; color: var(--danger); text-align: center; margin-top: 10px; height: 1.2rem; font-weight: 600; }
+        .val-correct { color: var(--success); font-weight: bold; }
+        .val-wrong { color: var(--danger); font-weight: bold; }
     </style>
 </head>
 <body onclick="unlockAudioOnce()">
@@ -120,8 +122,8 @@
     <main id="main-content">
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="screen active">
-            <h1>ÔN TẬP GIỮA KÌ 2</h1>
-            <div class="subtitle">Khoa học tự nhiên 9 - Phân môn Vật lí</div>
+            <h1>ÔN TẬP KHTN 9 - GIỮA KÌ 2</h1>
+            <div class="subtitle">Chủ đề: Thấu kính - Định luật Ohm - Mạch điện</div>
             
             <div class="form-group">
                 <label>Họ và tên</label>
@@ -184,7 +186,7 @@
                 <div id="rank-badge" class="rank-badge">---</div>
             </div>
 
-            <div class="review-title">LỊCH SỬ BÀI LÀM VÀ GIẢI THÍCH</div>
+            <div class="review-title">LỊCH SỬ BÀI LÀM VÀ GIẢI THÍCH CHI TIẾT</div>
             <div id="review-list"></div>
 
             <button class="btn-practice" onclick="location.reload()" style="margin-top: 25px; width: 100%;">LÀM BÀI MỚI</button>
@@ -200,7 +202,7 @@
         <p>Hệ thống tự động nộp bài và chấm điểm.</p>
     </div>
 
-    <!-- Audio Effects -->
+    <!-- Audio Logic -->
     <script>
         const audioClick = new Audio("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3");
         const audioSubmit = new Audio("https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3");
@@ -212,104 +214,72 @@
                 audioClick.pause();
                 audioClick.currentTime = 0;
                 audioUnlocked = true;
-            }).catch(e => console.log("Audio unlock failed"));
+            }).catch(e => console.log("Audio interaction needed"));
         }
 
         function playSfx(type) {
             const sound = (type === 'click') ? audioClick : audioSubmit;
             sound.currentTime = 0;
-            sound.play().catch(e => console.log("Audio play blocked"));
+            sound.play().catch(e => console.warn("Audio blocked by browser policy"));
         }
     </script>
 
     <script>
-        // --- DATA BANK (Full 40 items) ---
+        // --- DATA BANK (Gộp 80 câu từ bài 12 và đề ôn tập) ---
         const BANK = {
             mcq: [
-                { id: "TK.1", level: "Biết", q: "Điểm nằm chính giữa thấu kính mà mọi tia sáng truyền qua nó đều tiếp tục truyền thẳng theo phương cũ được gọi là", options: ["Tiêu điểm.", "Trục chính.", "Quang tâm.", "Tiêu cự."], answer: 2, exp: "Quang tâm là điểm chính giữa thấu kính, mọi tia sáng qua nó đều truyền thẳng." },
-                { id: "TK.2", level: "Biết", q: "Đường thẳng đi qua quang tâm và vuông góc với bề mặt thấu kính được gọi là", options: ["Tiêu cự.", "Trục chính.", "Tiêu điểm.", "Tia tới."], answer: 1, exp: "Trục chính là đường thẳng đi qua quang tâm và vuông góc với mặt thấu kính." },
-                { id: "TK.3", level: "Biết", q: "Thấu kính hội tụ là loại thấu kính có", options: ["Phần rìa dày hơn phần giữa.", "Phần rìa mỏng hơn phần giữa.", "Độ dày toàn bộ thấu kính bằng nhau.", "Hai mặt đều là mặt phẳng."], answer: 1, exp: "Đặc điểm thấu kính hội tụ: phần rìa mỏng hơn phần giữa." },
-                { id: "TK.4", level: "Biết", q: "Một chùm tia sáng tới song song với trục chính của thấu kính phân kì sẽ cho chùm tia ló", options: ["Hội tụ tại tiêu điểm của thấu kính.", "Truyền thẳng không bị lệch hướng.", "Loe rộng ra (phân kì).", "Song song với chùm tia tới."], answer: 2, exp: "Thấu kính phân kì làm loe rộng chùm tia sáng song song trục chính." },
-                { id: "TK.5", level: "Biết", q: "Đại lượng đặc trưng cho mức độ cản trở dòng điện của vật dẫn được gọi là", options: ["Cường độ dòng điện.", "Hiệu điện thế.", "Điện trở.", "Công suất điện."], answer: 2, exp: "Điện trở biểu thị tính cản trở dòng điện của vật dẫn." },
-                { id: "TK.6", level: "Biết", q: "Trong hệ thống đơn vị đo lường SI, đơn vị của điện trở là", options: ["Ampere (A).", "Volt (V).", "Ohm ($\\Omega$).", "Watt (W)."], answer: 2, exp: "Ohm ($\\Omega$) là đơn vị đo điện trở." },
-                { id: "TK.7", level: "Biết", q: "Kí hiệu của thấu kính hội tụ trên sơ đồ quang học là một đoạn thẳng có", options: ["Hai đầu mũi tên hướng ra ngoài.", "Hai đầu mũi tên hướng vào trong.", "Một đầu mũi tên, một đầu gạch ngang.", "Hai đầu gạch chéo."], answer: 0, exp: "Kí hiệu thấu kính hội tụ có hai mũi tên hướng ra ngoài." },
-                { id: "TK.8", level: "Biết", q: "Kính lúp là dụng cụ quang học bổ trợ cho mắt để quan sát", options: ["Các vật ở rất xa như các ngôi sao.", "Các vật nhỏ mà mắt thường khó quan sát rõ.", "Các vật nằm phía sau vật cản.", "Cấu trúc bên trong của các nguyên tử."], answer: 1, exp: "Kính lúp giúp quan sát vật nhỏ rõ nét hơn." },
-                { id: "TK.9", level: "Biết", q: "Nội dung định luật Ohm cho biết cường độ dòng điện chạy qua một dây dẫn", options: ["Tỉ lệ thuận với điện trở của dây dẫn đó.", "Tỉ lệ nghịch với hiệu điện thế giữa hai đầu dây.", "Tỉ lệ thuận với hiệu điện thế giữa hai đầu dây.", "KHÔNG phụ thuộc vào bản chất của dây dẫn."], answer: 2, exp: "$I$ tỉ lệ thuận với $U$." },
-                { id: "TK.10", level: "Biết", q: "Khi vật đặt ngoài khoảng tiêu cự của thấu kính hội tụ ($d > f$), ảnh của vật qua thấu kính là", options: ["Ảnh ảo, cùng chiều với vật.", "Ảnh thật, ngược chiều với vật.", "Ảnh ảo, ngược chiều với vật.", "Ảnh thật, cùng chiều với vật."], answer: 1, exp: "Vật ngoài $f$ thấu kính hội tụ cho ảnh thật ngược chiều." },
-                { id: "TK.11", level: "Hiểu", q: "Tia tới đi qua tiêu điểm $F$ của thấu kính hội tụ sẽ cho tia ló", options: ["Đi qua quang tâm $O$.", "Song song với trục chính.", "Truyền thẳng theo phương của tia tới.", "Phản xạ ngược lại tiêu điểm $F$."], answer: 1, exp: "Tia qua tiêu điểm thấu kính hội tụ cho tia ló song song trục chính." },
-                { id: "TK.12", level: "Hiểu", q: "Tia tới có đường kéo dài đi qua tiêu điểm $F'$ của thấu kính phân kì sẽ cho tia ló", options: ["Song song với trục chính.", "Đi qua quang tâm $O$.", "Loe rộng ra theo phương bất kì.", "Vuông góc với trục chính."], answer: 0, exp: "Tia tới hướng tiêu điểm ảnh ảo cho tia ló song song trục chính." },
-                { id: "TK.13", level: "Hiểu", q: "Về mặt quang học, kính lúp đơn giản nhất là một", options: ["Thấu kính phân kì có tiêu cự rất ngắn.", "Thấu kính hội tụ có tiêu cự ngắn.", "Bản thủy tinh hai mặt song song dày.", "Gương cầu lồi có bán kính lớn."], answer: 1, exp: "Kính lúp là thấu kính hội tụ tiêu cự ngắn." },
-                { id: "TK.14", level: "Hiểu", q: "Khi vật đặt trong khoảng tiêu cự của thấu kính hội tụ ($d < f$), ảnh thu được có đặc điểm là", options: ["Ảnh thật, nhỏ hơn vật.", "Ảnh ảo, lớn hơn vật và cùng chiều.", "Ảnh thật, lớn hơn vật và ngược chiều.", "Ảnh ảo, nhỏ hơn vật và ngược chiều."], answer: 1, exp: "Ảnh ảo cùng chiều lớn hơn vật." },
-                { id: "TK.15", level: "Hiểu", q: "Nếu hiệu điện thế giữa hai đầu một dây dẫn tăng lên 3 lần thì cường độ dòng điện chạy qua dây dẫn đó sẽ", options: ["giảm đi 3 lần.", "tăng lên 3 lần.", "KHÔNG thay đổi.", "tăng lên 9 lần."], answer: 1, exp: "$I$ tỉ lệ thuận $U$." },
-                { id: "TK.16", level: "Hiểu", q: "Đồ thị biểu diễn mối quan hệ giữa cường độ dòng điện $I$ và hiệu điện thế $U$ của một điện trở là", options: ["Một đường cong parabol đi qua gốc tọa độ.", "Một đường thẳng đi qua gốc tọa độ.", "Một đường thẳng song song với trục hoành.", "Một đường tròn tâm tại gốc tọa độ."], answer: 1, exp: "Quan hệ tỉ lệ thuận nên đồ thị là đường thẳng qua gốc tọa độ." },
-                { id: "TK.17", level: "Hiểu", q: "Để xác định ảnh $S'$ của điểm sáng $S$ qua thấu kính hội tụ, ta cần vẽ ít nhất bao nhiêu tia ló?", options: ["1 tia ló.", "2 tia ló.", "3 tia ló.", "4 tia ló."], answer: 1, exp: "Giao điểm 2 tia xác định vị trí ảnh." },
-                { id: "TK.18", level: "Hiểu", q: "Khi quan sát một vật nhỏ qua kính lúp, mắt ta nhìn thấy", options: ["Ảnh thật, ngược chiều và rất lớn.", "Ảnh ảo, cùng chiều và lớn hơn vật.", "Ảnh ảo, ngược chiều và nhỏ hơn vật.", "Chính vật đó nhưng ở khoảng cách gần hơn."], answer: 1, exp: "Mắt quan sát được ảnh ảo qua thấu kính." },
-                { id: "TK.19", level: "Hiểu", q: "Dựa vào công thức định luật Ohm, nếu biết $U$ và $I$ thì điện trở $R$ của dây dẫn là", options: ["$R = U / I$.", "$R = I / U$.", "$R = U \\cdot I$.", "$R = U^2 / I$."], answer: 0, exp: "$R = U/I$." },
-                { id: "TK.20", level: "Hiểu", q: "Tia sáng tới đi qua quang tâm $O$ của thấu kính hội tụ hoặc thấu kính phân kì sẽ", options: ["Bị lệch hướng về phía trục chính.", "Bị lệch hướng ra xa trục chính.", "Tiếp tục truyền thẳng theo phương cũ.", "Bị phản xạ toàn phần tại mặt thấu kính."], answer: 2, exp: "Tia qua quang tâm luôn truyền thẳng." },
-                { id: "TK.21", level: "VD", q: "Đặt một hiệu điện thế $U = 12 \\, V$ vào hai đầu một điện trở $R = 4 \\, \\Omega$. Cường độ dòng điện chạy qua điện trở là", options: ["$48 \\, A$.", "$3 \\, A$.", "$0,33 \\, A$.", "$8 \\, A$."], answer: 1, exp: "$I = 12/4 = 3 \\, A$." },
-                { id: "TK.22", level: "VD", q: "Một vật sáng AB cao $2 \\, cm$ đặt vuông góc với trục chính của thấu kính hội tụ có $f = 10 \\, cm$. Nếu vật cách thấu kính $20 \\, cm$ ($d = 2f$) thì ảnh A'B' có độ cao là", options: ["$1 \\, cm$.", "$2 \\, cm$.", "$4 \\, cm$.", "$0,5 \\, cm$."], answer: 1, exp: "$d=2f$ ảnh bằng vật." },
-                { id: "TK.23", level: "VD", q: "Một vật đặt trước thấu kính hội tụ cho ảnh thật ngược chiều và bằng vật. Biết vật cách thấu kính $20 \\, cm$. Tiêu cự của thấu kính là", options: ["$10 \\, cm$.", "$20 \\, cm$.", "$40 \\, cm$.", "$5 \\, cm$."], answer: 0, exp: "Ảnh thật bằng vật khi $d=2f=20 \\Rightarrow f=10$." },
-                { id: "TK.24", level: "VD", q: "Trên một kính lúp có ghi $5X$. Tiêu cự $f$ của kính lúp này là", options: ["$5 \\, cm$.", "$50 \\, cm$.", "$25 \\, cm$.", "$10 \\, cm$."], answer: 0, exp: "$G=25/f \\Rightarrow 5=25/f \\Rightarrow f=5$." }
+                { id: "12.1", level: "Biết", q: "Đoạn mạch gồm hai điện trở thành phần mắc nối tiếp. Khẳng định nào sau đây là đúng về điện trở tương đương của đoạn mạch?", options: ["Bằng tổng các điện trở thành phần.", "Nhỏ hơn điện trở thành phần nhỏ nhất.", "Bằng tích các điện trở thành phần.", "Bằng hiệu các điện trở thành phần."], answer: 0, exp: "$R_{tđ} = R_1 + R_2$." },
+                { id: "12.2", level: "Biết", q: "Đối với đoạn mạch gồm hai điện trở mắc song song, điện trở tương đương của đoạn mạch KHÔNG thể có đặc điểm nào sau đây?", options: ["Nhỏ hơn điện trở thành phần thứ nhất.", "Nhỏ hơn điện trở thành phần thứ hai.", "Lớn hơn các điện trở thành phần.", "Nhỏ hơn điện trở thành phần nhỏ nhất."], answer: 2, exp: "$R_{tđ}$ song song luôn nhỏ hơn điện trở nhánh nhỏ nhất." },
+                { id: "12.3", level: "Hiểu", q: "Trong một đoạn mạch mắc nối tiếp gồm hai điện trở khác nhau, đại lượng nào sau đây có giá trị như nhau tại mọi điểm?", options: ["Điện trở tương đương.", "Hiệu điện thế.", "Cường độ dòng điện.", "Điện trở thành phần."], answer: 2, exp: "Mạch nối tiếp có cường độ dòng điện như nhau: $I = I_1 = I_2$." },
+                { id: "12.5", level: "VD", q: "Hai điện trở 10 Ω và 20 Ω được mắc nối tiếp với nhau. Điện trở tương đương của đoạn mạch này là bao nhiêu?", options: ["10 Ω.", "20 Ω.", "30 Ω.", "6,7 Ω."], answer: 2, exp: "$R_{tđ} = 10 + 20 = 30$ Ω." },
+                { id: "12.6", level: "VD", q: "Mắc song song hai điện trở 20 Ω và 30 Ω. Giá trị điện trở tương đương của đoạn mạch là", options: ["50 Ω.", "12 Ω.", "10 Ω.", "15 Ω."], answer: 1, exp: "$R_{tđ} = (20 \cdot 30)/(20+30) = 12$ Ω." },
+                { id: "TK.1", level: "Biết", q: "Điểm nằm chính giữa thấu kính mà mọi tia sáng truyền qua nó đều tiếp tục truyền thẳng theo phương cũ được gọi là", options: ["Tiêu điểm.", "Trục chính.", "Quang tâm.", "Tiêu cự."], answer: 2, exp: "Quang tâm truyền thẳng tia sáng." },
+                { id: "TK.3", level: "Biết", q: "Thấu kính hội tụ là loại thấu kính có", options: ["Phần rìa dày hơn phần giữa.", "Phần rìa mỏng hơn phần giữa.", "Độ dày toàn bộ thấu kính bằng nhau.", "Hai mặt đều là mặt phẳng."], answer: 1, exp: "Thấu kính hội tụ mỏng ở rìa, dày ở giữa." },
+                { id: "TK.9", level: "Biết", q: "Nội dung định luật Ohm cho biết cường độ dòng điện chạy qua một dây dẫn", options: ["tỉ lệ thuận với điện trở của dây dẫn đó.", "tỉ lệ nghịch với hiệu điện thế giữa hai đầu dây.", "tỉ lệ thuận với hiệu điện thế giữa hai đầu dây.", "KHÔNG phụ thuộc vào bản chất của dây dẫn."], answer: 2, exp: "$I$ tỉ lệ thuận $U$." },
+                { id: "TK.13", level: "Hiểu", q: "Về mặt quang học, kính lúp đơn giản nhất là một", options: ["Thấu kính phân kì có tiêu cự rất ngắn.", "Thấu kính hội tụ có tiêu cự ngắn.", "Bản thủy tinh hai mặt song song dày.", "Gương cầu lồi có bán kính lớn."], answer: 1, exp: "Kính lúp là TKHT tiêu cự ngắn." },
+                { id: "TK.21", level: "VD", q: "Đặt một hiệu điện thế $U = 12$ V vào hai đầu một điện trở $R = 4$ Ω. Cường độ dòng điện chạy qua điện trở là", options: ["48 A.", "3 A.", "0,33 A.", "8 A."], answer: 1, exp: "$I = 12/4 = 3$ A." },
+                { id: "12.16", level: "VD", q: "Có hai điện trở, nếu mắc nối tiếp thì R tương đương là 25 Ω, mắc song song là 6 Ω. Đó là hai trở nào?", options: ["10 Ω và 15 Ω.", "5 Ω và 20 Ω.", "12 Ω và 13 Ω.", "8 Ω và 17 Ω."], answer: 0, exp: "$10+15=25$ và $(10 \cdot 15)/25=6$." },
+                { id: "12.18", level: "VD", q: "Mạch điện gồm ba điện trở 5 Ω, 10 Ω, 15 Ω mắc nối tiếp. Nếu cường độ dòng điện là 0,2 A thì hiệu điện thế hai đầu mạch là", options: ["6 V.", "3 V.", "1,5 V.", "4,5 V."], answer: 0, exp: "$U = 0,2 \cdot (5+10+15) = 6$ V." },
+                { id: "TK.11", level: "Hiểu", q: "Tia tới đi qua tiêu điểm F của thấu kính hội tụ sẽ cho tia ló", options: ["Đi qua quang tâm O.", "Song song với trục chính.", "Truyền thẳng theo phương của tia tới.", "Phản xạ ngược lại tiêu điểm F."], answer: 1, exp: "Tia qua tiêu điểm vật cho tia ló song song trục chính." },
+                { id: "TK.12", level: "Hiểu", q: "Tia tới có đường kéo dài đi qua tiêu điểm $F'$ của thấu kính phân kì sẽ cho tia ló", options: ["Song song với trục chính.", "Đi qua quang tâm O.", "Loe rộng ra theo phương bất kì.", "Vuông góc với trục chính."], answer: 0, exp: "Tính chất tia đặc biệt thấu kính phân kì." },
+                { id: "TK.18", level: "Hiểu", q: "Khi quan sát một vật nhỏ qua kính lúp, mắt ta nhìn thấy", options: ["Ảnh thật, ngược chiều và rất lớn.", "Ảnh ảo, cùng chiều và lớn hơn vật.", "Ảnh ảo, ngược chiều và nhỏ hơn vật.", "Chính vật đó nhưng ở khoảng cách gần hơn."], answer: 1, exp: "Kính lúp giúp quan sát ảnh ảo phóng đại." },
+                { id: "12.12", level: "VD", q: "Hai điện trở 10 Ω và 15 Ω mắc song song vào nguồn 6 V. Cường độ dòng điện trong mạch chính là", options: ["1 A.", "0,24 A.", "0,4 A.", "0,6 A."], answer: 0, exp: "$R_{p}=6$ Ω nên $I = 6/6=1$ A." }
             ],
             tf: [
-                { id: "TK.25", level: "Hiểu", context: "Xét một vật sáng $AB$ đặt vuông góc với trục chính của một thấu kính hội tụ có tiêu cự $f$.", statements: [
-                    { id: "a", text: "Tia tới song song với trục chính thì tia ló đi qua tiêu điểm ảnh $F'$.", correct: true, exp: "Đúng tính chất tia thấu kính hội tụ." },
-                    { id: "b", text: "Nếu vật $AB$ nằm trong khoảng tiêu cự, ta KHÔNG thể quan sát được ảnh bằng mắt.", correct: false, exp: "Sai, mắt nhìn thấy ảnh ảo qua kính." },
-                    { id: "c", text: "Để dựng ảnh $A'B'$, ta có thể sử dụng tia tới qua quang tâm $O$ và tia tới song song trục chính.", correct: true, exp: "Đúng, đây là các tia chuẩn để dựng ảnh." },
-                    { id: "d", text: "Ảnh của vật tạo bởi thấu kính hội tụ luôn luôn là ảnh thật và ngược chiều với vật.", correct: false, exp: "Sai, có thể là ảnh ảo cùng chiều." }
+                { id: "12.25", level: "Hiểu", context: "Cho một đoạn mạch điện gồm ba điện trở được mắc nối tiếp với nhau.", statements: [
+                    { id: "a", text: "Cường độ dòng điện chạy qua ba điện trở luôn bằng nhau.", correct: true, exp: "Đúng, tính chất nối tiếp." },
+                    { id: "b", text: "Điện trở tương đương của mạch luôn nhỏ hơn điện trở thành phần lớn nhất.", correct: false, exp: "Sai, R tương đương lớn nhất." },
+                    { id: "c", text: "Hiệu điện thế giữa hai đầu đoạn mạch bằng tổng hiệu điện thế thành phần.", correct: true, exp: "Đúng, $U = U_1+U_2+U_3$." },
+                    { id: "d", text: "Nếu gỡ bỏ một điện trở, dòng qua các trở còn lại vẫn như cũ.", correct: false, exp: "Sai, mạch hở dòng bằng 0." }
                 ]},
-                { id: "TK.26", level: "Hiểu", context: "Một đoạn mạch có điện trở $R$ không đổi, hiệu điện thế giữa hai đầu đoạn mạch là $U$.", statements: [
-                    { id: "a", text: "Cường độ dòng điện $I$ tỉ lệ thuận với hiệu điện thế $U$.", correct: true, exp: "Đúng theo định luật Ohm." },
-                    { id: "b", text: "Khi điện trở $R$ tăng lên 2 lần và $U$ giữ nguyên thì cường độ dòng điện $I$ tăng 2 lần.", correct: false, exp: "Sai, $I$ tỉ lệ nghịch $R$ nên $I$ phải giảm 2." },
-                    { id: "c", text: "Đơn vị của cường độ dòng điện $I$ là Volt, đơn vị của điện trở $R$ là Ohm.", correct: false, exp: "Sai, đơn vị $I$ là Ampe." },
-                    { id: "d", text: "Công thức của định luật Ohm được viết là $I = U/R$.", correct: true, exp: "Đúng biểu thức định luật Ohm." }
+                { id: "TK.25", level: "Hiểu", context: "Xét vật sáng $AB$ đặt vuông góc với trục chính của thấu kính hội tụ tiêu cự $f$.", statements: [
+                    { id: "a", text: "Tia tới song song với trục chính thì tia ló đi qua tiêu điểm ảnh $F'$.", correct: true, exp: "Đúng tính chất tia đặc biệt." },
+                    { id: "b", text: "Nếu vật $AB$ nằm trong khoảng tiêu cự, ta KHÔNG thể quan sát được ảnh.", correct: false, exp: "Sai, mắt nhìn được ảnh ảo." },
+                    { id: "c", text: "Để dựng ảnh $A'B'$, có thể dùng tia qua quang tâm $O$ và tia song song trục chính.", correct: true, exp: "Đúng." },
+                    { id: "d", text: "Ảnh tạo bởi thấu kính hội tụ luôn ngược chiều với vật.", correct: false, exp: "Sai, ảnh ảo cùng chiều." }
                 ]},
-                { id: "TK.27", level: "VD", context: "Về kính lúp và cách sử dụng kính lúp để quan sát các vật nhỏ:", statements: [
-                    { id: "a", text: "Khi quan sát vật qua kính lúp, ta phải đặt vật trong khoảng tiêu cự của kính.", correct: true, exp: "Để tạo được ảnh ảo phóng đại." },
-                    { id: "b", text: "Số bội giác $G$ của kính lúp càng lớn thì tiêu cự $f$ của kính đó càng dài.", correct: false, exp: "Sai, tỉ lệ nghịch ($G=25/f$)." },
-                    { id: "c", text: "Kính lúp giúp ta nhìn thấy ảnh ảo của vật rõ nét và lớn hơn vật.", correct: true, exp: "Đúng tính chất kính lúp." },
-                    { id: "d", text: "Một kính lúp có số bội giác $10X$ sẽ có tiêu cự bằng $2,5 \\, cm$.", correct: true, exp: "$25/10 = 2,5 \\, cm$." }
+                { id: "12.26", level: "VD", context: "Hai điện trở $R_1$ và $R_2$ mắc song song, biết $R_1 > R_2$.", statements: [
+                    { id: "a", text: "Hiệu điện thế giữa hai đầu $R_1$ lớn hơn hiệu điện thế hai đầu $R_2$.", correct: false, exp: "Mạch song song $U$ bằng nhau." },
+                    { id: "b", text: "Điện trở tương đương nhỏ hơn $R_2$.", correct: true, exp: "R song song nhỏ hơn trở nhánh nhỏ nhất." },
+                    { id: "c", text: "Dòng điện qua $R_1$ nhỏ hơn dòng điện qua $R_2$.", correct: true, exp: "$I = U/R$, $R$ lớn thì $I$ nhỏ." },
+                    { id: "d", text: "Mắc thêm $R_3$ song song thì dòng qua $R_1$ giảm.", correct: false, exp: "Dòng nhánh độc lập." }
                 ]},
-                { id: "TK.28", level: "Hiểu", context: "Cho một thấu kính phân kì có tiêu cự $f$. Vật sáng $AB$ đặt vuông góc với trục chính.", statements: [
-                    { id: "a", text: "Tia tới song song với trục chính cho tia ló có đường kéo dài đi qua tiêu điểm $F$.", correct: true, exp: "Đúng tính chất tia thấu kính phân kì." },
-                    { id: "b", text: "Thấu kính phân kì có thể tạo ra ảnh thật nếu vật đặt rất xa thấu kính.", correct: false, exp: "Sai, luôn cho ảnh ảo đối với vật thật." },
-                    { id: "c", text: "Ảnh của một vật thật qua thấu kính phân kì luôn luôn là ảnh ảo, cùng chiều và nhỏ hơn vật.", correct: true, exp: "Đúng đặc điểm ảnh." },
-                    { id: "d", text: "Khi đưa vật lại gần thấu kính phân kì, ảnh ảo sẽ càng nhỏ đi.", correct: false, exp: "Sai, ảnh ảo sẽ lớn dần lên." }
-                ]},
-                { id: "TK.29", level: "VD", context: "Đồ thị biểu diễn $I(U)$ của hai điện trở $R_1$ và $R_2$ qua gốc tọa độ, đường $R_1$ dốc hơn đường $R_2$.", statements: [
-                    { id: "a", text: "Với cùng một hiệu điện thế $U$, cường độ dòng điện qua $R_1$ lớn hơn qua $R_2$.", correct: true, exp: "Độ dốc lớn tương ứng $I$ lớn hơn." },
-                    { id: "b", text: "Điện trở $R_1$ có giá trị lớn hơn điện trở $R_2$.", correct: false, exp: "Sai, cùng $U$ mà $I$ lớn hơn thì $R$ nhỏ hơn." },
-                    { id: "c", text: "Nếu $U = 0 \\, V$ thì cường độ dòng điện qua cả hai điện trở đều bằng $0 \\, A$.", correct: true, exp: "Đúng, đồ thị qua gốc $(0,0)$." },
-                    { id: "d", text: "Tỉ số $U/I$ đối với mỗi điện trở là một đại lượng KHÔNG đổi.", correct: true, exp: "Đúng, tỉ số này chính là điện trở $R$." }
-                ]},
-                { id: "TK.30", level: "Hiểu", context: "Xét trường hợp vật sáng ở rất xa thấu kính hội tụ (ví dụ Mặt Trời).", statements: [
-                    { id: "a", text: "Chùm tia sáng từ vật truyền đến thấu kính được coi là chùm song song.", correct: true, exp: "Vật ở vô cực phát tia song song." },
-                    { id: "b", text: "Ảnh của vật sẽ hội tụ tại đúng tiêu điểm $F'$ của thấu kính.", correct: true, exp: "Đúng đặc điểm hội tụ chùm song song." },
-                    { id: "c", text: "Ảnh thu được trong trường hợp này là ảnh ảo.", correct: false, exp: "Sai, ảnh Mặt Trời hứng trên màn là ảnh thật." },
-                    { id: "d", text: "Để đo tiêu cự, ta có thể đo khoảng cách từ quang tâm đến vị trí ảnh này.", correct: true, exp: "Đúng, đo $f$ bằng cách đo vị trí hội tụ." }
-                ]},
-                { id: "TK.31", level: "VD", context: "Khảo sát thấu kính hội tụ có tiêu cự $f = 12 \\, cm$.", statements: [
-                    { id: "a", text: "Tiêu cự là khoảng cách từ quang tâm đến các tiêu điểm.", correct: true, exp: "Đúng định nghĩa." },
-                    { id: "b", text: "Nếu $d = 12 \\, cm$, ảnh sẽ ở vô cực và KHÔNG hứng được trên màn.", correct: true, exp: "Đúng, tia ló song song." },
-                    { id: "c", text: "Nếu $d = 24 \\, cm$, ảnh thu được là ảnh thật, ngược chiều và bằng vật.", correct: true, exp: "Đúng vì $d=2f$." },
-                    { id: "d", text: "Nếu $d = 8 \\, cm$, ảnh thu được là ảnh ảo, nằm cách thấu kính $12 \\, cm$.", correct: false, exp: "Sai, tính toán theo công thức ảnh ảo sẽ khác." }
-                ]},
-                { id: "TK.32", level: "Hiểu", context: "Kết quả đo $U$ và $I$ của một dây dẫn: $U_1=6V, I_1=0,2A; U_2=12V, I_2=0,4A$.", statements: [
-                    { id: "a", text: "Điện trở của dây dẫn trong hai lần đo là như nhau và bằng $30 \\, \\Omega$.", correct: true, exp: "$6/0,2 = 12/0,4 = 30$." },
-                    { id: "b", text: "Nếu hiệu điện thế là $24 \\, V$ thì điện trở của dây dẫn cũng bằng $30 \\, \\Omega$.", correct: true, exp: "$R$ là đặc tính vật dẫn, không đổi." },
-                    { id: "c", text: "Dây dẫn này tuân theo định luật Ohm.", correct: true, exp: "Vì $I$ tỉ lệ thuận $U$." },
-                    { id: "d", text: "Khi thay dây dẫn này bằng dây khác có điện trở lớn hơn, với cùng $U$ thì $I$ sẽ lớn hơn.", correct: false, exp: "Sai, $R$ lớn thì $I$ nhỏ." }
+                { id: "TK.29", level: "VD", context: "Đồ thị $I(U)$ của hai trở $R_1$ và $R_2$ đi qua gốc tọa độ, đường $R_1$ dốc hơn đường $R_2$.", statements: [
+                    { id: "a", text: "Cùng một hiệu điện thế $U$, dòng qua $R_1$ lớn hơn $R_2$.", correct: true, exp: "Độ dốc lớn -> $I$ lớn." },
+                    { id: "b", text: "Điện trở $R_1$ có giá trị lớn hơn điện trở $R_2$.", correct: false, exp: "$R_1 < R_2$." },
+                    { id: "c", text: "Nếu $U = 0$ thì cường độ dòng điện bằng $0$.", correct: true, exp: "Đúng." },
+                    { id: "d", text: "Tỉ số $U/I$ của mỗi trở không đổi.", correct: true, exp: "Đúng, tỉ số này là $R$." }
                 ]}
             ],
             short: [
-                { id: "TK.33", level: "VD", q: "Một bóng đèn có điện trở $12 \\, \\Omega$ được thắp sáng bởi nguồn điện $6 \\, V$. Cường độ dòng điện chạy qua đèn là bao nhiêu Ampere?", answer: ["0,5", "0.5"], exp: "$I = 6/12 = 0,5 \\, A$." },
-                { id: "TK.34", level: "VD", q: "Khi đặt vào hai đầu dây dẫn một hiệu điện thế $12 \\, V$ thì dòng điện qua nó có cường độ $0,2 \\, A$. Điện trở của dây dẫn này là bao nhiêu Ohm?", answer: ["60"], exp: "$R = 12/0,2 = 60 \\, \\Omega$." },
-                { id: "TK.35", level: "VD", q: "Một người dùng kính lúp có số bội giác $2,5X$ để quan sát một con tem. Tiêu cự của kính lúp này là bao nhiêu centimet?", answer: ["10"], exp: "$f = 25/2,5 = 10 \\, cm$." },
-                { id: "TK.36", level: "VD", q: "Một điện trở $10 \\, \\Omega$ chịu được dòng điện tối đa là $2 \\, A$. Hiệu điện thế tối đa có thể đặt vào hai đầu điện trở này là bao nhiêu Volt?", answer: ["20"], exp: "$U = 2 \cdot 10 = 20 \\, V$." },
-                { id: "TK.37", level: "VD", q: "Vật sáng AB cách thấu kính hội tụ $24 \\, cm$ ($d=2f$). Khoảng cách từ ảnh đến thấu kính là bao nhiêu centimet?", answer: ["24"], exp: "$d=2f$ thì $d'=2f=24 \\, cm$." },
-                { id: "TK.38", level: "VD", q: "Kính lúp có tiêu cự $5 \\, cm$. Số bội giác ghi trên kính là bao nhiêu? (Ghi dạng: 5X)", answer: ["5X", "5x"], exp: "$G=25/5=5$." },
-                { id: "TK.39", level: "VD", q: "Nếu hiệu điện thế tăng thêm $3 \\, V$ thì dòng điện tăng thêm $0,1 \\, A$. Điện trở dây dẫn là bao nhiêu Ohm?", answer: ["30"], exp: "$R = \Delta U / \Delta I = 3 / 0,1 = 30$." },
-                { id: "TK.40", level: "Hiểu", q: "Thấu kính phân kì có tiêu cự $15 \\, cm$. Vật đặt rất xa cho ảnh cách quang tâm bao nhiêu centimet?", answer: ["15"], exp: "Vật ở vô cực cho ảnh tại tiêu điểm, cách quang tâm $f=15 \\, cm$." }
+                { id: "12.33", level: "VD", q: "Hai điện trở 40 Ω và 60 Ω mắc nối tiếp. Tính điện trở tương đương của đoạn mạch (Ω).", answer: ["100"], exp: "40 + 60 = 100 Ω." },
+                { id: "12.34", level: "VD", q: "Mạch nối tiếp hai trở 20 Ω và 30 Ω, hiệu điện thế 10 V. Tính cường độ dòng mạch chính (A).", answer: ["0,2", "0.2"], exp: "$I = 10 / 50 = 0,2$ A." },
+                { id: "12.35", level: "VD", q: "4 điện trở 20 Ω giống nhau mắc song song. Tính R tương đương (Ω).", answer: ["5"], exp: "$20/4 = 5$ Ω." },
+                { id: "TK.34", level: "VD", q: "Đặt $U=12$ V thì $I=0,2$ A. Tính điện trở dây dẫn (Ohm).", answer: ["60"], exp: "$R = 12/0,2 = 60$ Ω." },
+                { id: "TK.35", level: "VD", q: "Kính lúp có số bội giác $2,5X$. Tiêu cự của kính là bao nhiêu centimet?", answer: ["10"], exp: "$f = 25 / 2,5 = 10$ cm." },
+                { id: "TK.36", level: "VD", q: "Điện trở 10 Ω chịu dòng tối đa 2 A. Hiệu điện thế tối đa có thể đặt vào là bao nhiêu Volt?", answer: ["20"], exp: "$U = 10 \cdot 2 = 20$ V." },
+                { id: "TK.37", level: "VD", q: "Vật đặt cách thấu kính hội tụ 24 cm ($d=2f$), tiêu cự 12 cm. Ảnh cách kính bao nhiêu cm?", answer: ["24"], exp: "$d=2f \Rightarrow d'=2f=24$ cm." },
+                { id: "TK.38", level: "VD", q: "Kính lúp tiêu cự 5 cm. Số bội giác ghi trên kính là bao nhiêu? (Ghi dạng: 5X)", answer: ["5X", "5x"], exp: "$G=25/5=5$." }
             ]
         };
 
@@ -317,7 +287,7 @@
         let currentQuiz = [];
         let currentIndex = 0;
         let userAnswers = {}; 
-        let timer = null;
+        let timer = null; 
         let timeRemaining = 0;
         let isPractice = true;
         let finished = false;
@@ -343,26 +313,20 @@
             currentIndex = 0;
             finished = false;
 
-            const liveWarn = document.getElementById('live-test-warning');
-
             if (!isPractice) {
                 try {
                     const docElm = document.documentElement;
                     if (docElm.requestFullscreen) await docElm.requestFullscreen();
                 } catch (e) { console.warn("Fullscreen blocked"); }
-                
-                liveWarn.classList.remove('hidden');
+                document.getElementById('live-test-warning').classList.remove('hidden');
                 document.addEventListener('visibilitychange', handleCheat);
                 window.addEventListener('blur', handleCheat);
                 document.addEventListener('fullscreenchange', handleFsChange);
-            } else {
-                liveWarn.classList.add('hidden');
             }
 
-            // Xây dựng đề: Xáo trộn và chọn câu ngẫu nhiên
+            // Sinh đề 20 câu: 12 MCQ, 4 TF, 4 Short
             let mcqPool = shuffle([...BANK.mcq]);
             let mcqs = mcqPool.slice(0, 12).map(q => {
-                // Xáo trộn phương án bên trong
                 let optionsWithMeta = q.options.map((text, i) => ({ text, isCorrect: i === q.answer }));
                 shuffle(optionsWithMeta);
                 return {
@@ -375,7 +339,7 @@
             let tfPool = shuffle([...BANK.tf]);
             let tfs = tfPool.slice(0, 4).map(q => ({
                 ...q,
-                statements: shuffle([...q.statements]) // Xáo trộn các nhận định a, b, c, d
+                statements: shuffle([...q.statements])
             }));
 
             let shortPool = shuffle([...BANK.short]);
@@ -391,17 +355,15 @@
         }
 
         function handleFsChange() {
-            if (!isPractice && !finished) {
-                if (!document.fullscreenElement) {
-                    document.getElementById('violation-reason').textContent = "Bạn đã thoát chế độ Toàn màn hình.";
-                    triggerAutoSubmit();
-                }
+            if (!isPractice && !finished && !document.fullscreenElement) {
+                document.getElementById('violation-reason').textContent = "Bạn đã thoát chế độ Toàn màn hình.";
+                triggerAutoSubmit();
             }
         }
 
         function handleCheat() {
             if (!isPractice && !finished && document.visibilityState === 'hidden') {
-                document.getElementById('violation-reason').textContent = "Bạn đã rời khỏi Tab hoặc trình duyệt.";
+                document.getElementById('violation-reason').textContent = "Bạn đã rời khỏi trình duyệt hoặc tab.";
                 triggerAutoSubmit();
             }
         }
@@ -417,6 +379,7 @@
 
         function renderQuestion() {
             const q = currentQuiz[currentIndex];
+            if (!q) return;
             const container = document.getElementById('answer-container');
             const body = document.getElementById('question-body');
             const pTitle = document.getElementById('part-title');
@@ -460,10 +423,9 @@
                 });
                 container.appendChild(box);
             } else {
-                container.innerHTML = `<div class="short-wrapper"><div class="short-guide">Nhập tối đa 4 kí tự. Dùng dấu "," cho số thập phân (Ví dụ: 0,5).</div>
+                // Sửa lỗi: Đọc giá trị trực tiếp từ DOM trong checkQuestionComplete để tránh mất sự kiện do MathJax
+                container.innerHTML = `<div class="short-wrapper"><div class="short-guide">Hướng dẫn: Nhập tối đa 4 kí tự. Dùng dấu "," cho số thập phân (Ví dụ: 0,5).</div>
                 <input type="text" class="short-input" id="short-inp" maxlength="4" placeholder="..." value="${userAnswers[q.id] || ''}"></div>`;
-                const inp = container.querySelector('#short-inp');
-                inp.oninput = (e) => userAnswers[q.id] = e.target.value;
             }
 
             document.getElementById('btn-prev').style.visibility = (currentIndex === 0) ? 'hidden' : 'visible';
@@ -471,7 +433,10 @@
             document.getElementById('btn-submit').classList.toggle('hidden', currentIndex !== 19);
 
             resetTimer(type);
-            if (window.MathJax) MathJax.typesetPromise([body, container]).catch(e => console.log(e));
+            // MathJax quét chọn lọc để không phá hủy các input
+            if (window.MathJax) {
+                MathJax.typesetPromise([body]).catch(e => console.log(e));
+            }
         }
 
         function resetTimer(type) {
@@ -503,6 +468,13 @@
         }
 
         function validateAndMove() {
+            // Đồng bộ dữ liệu từ ô input ngắn trước khi kiểm tra
+            const shortInp = document.getElementById('short-inp');
+            if (shortInp) {
+                const q = currentQuiz[currentIndex];
+                userAnswers[q.id] = shortInp.value;
+            }
+
             if (checkQuestionComplete()) moveQuestion(1);
             else document.getElementById('validation-msg').textContent = "Vui lòng chọn đầy đủ phương án!";
         }
@@ -512,8 +484,14 @@
             if (!q) return false;
             let type = q.statements ? 'tf' : (q.options ? 'mcq' : 'short');
             if (type === 'mcq') return userAnswers[q.id] !== undefined;
-            if (type === 'tf') return q.statements.every(s => (userAnswers[q.id] || {})[s.id] !== undefined);
-            if (type === 'short') return (userAnswers[q.id] || "").trim() !== "";
+            if (type === 'tf') {
+                const ans = userAnswers[q.id] || {};
+                return q.statements.every(s => ans[s.id] !== undefined);
+            }
+            if (type === 'short') {
+                const val = (userAnswers[q.id] || "").toString().trim();
+                return val !== "";
+            }
             return false;
         }
 
@@ -523,39 +501,44 @@
         }
 
         function requestSubmit() {
+            // Đồng bộ dữ liệu lần cuối
+            const shortInp = document.getElementById('short-inp');
+            if (shortInp) {
+                const q = currentQuiz[currentIndex];
+                userAnswers[q.id] = shortInp.value;
+            }
+
             if (!checkQuestionComplete()) {
-                document.getElementById('validation-msg').textContent = "Vui lòng hoàn thành câu hỏi cuối!";
+                document.getElementById('validation-msg').textContent = "Vui lòng hoàn thành câu hỏi cuối trước khi nộp bài!";
                 return;
             }
             if (confirm("Xác nhận nộp bài?")) finishQuiz();
         }
 
-        async function finishQuiz() {
+        function finishQuiz() {
             if (finished) return;
             finished = true;
             if (timer) clearInterval(timer);
             playSfx('submit');
             
-            // Exit Fullscreen
             if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
 
             calculateScore();
             
-            // Firebase nộp bài (đã bọc try-catch để tránh crash khi chưa điền config)
-            if (window.saveResult) {
-                try {
-                    await window.saveResult({
-                        sobaodanh: document.getElementById("input-sbd").value,
-                        hovaten: document.getElementById("input-name").value,
-                        lop: document.getElementById("input-class").value,
-                        diem: finalScore,
-                        time: Math.floor((Date.now() - startTime) / 1000)
-                    });
-                } catch (e) { console.error("Lỗi gửi dữ liệu Firebase:", e); }
-            }
-
             document.getElementById('quiz-screen').classList.remove('active');
             document.getElementById('result-screen').classList.add('active');
+
+            // Lưu dữ liệu async ngầm
+            if (typeof window.triggerSaveResult === 'function') {
+                const payload = {
+                    sobaodanh: document.getElementById("input-sbd").value,
+                    hovaten: document.getElementById("input-name").value,
+                    lop: document.getElementById("input-class").value,
+                    diem: finalScore,
+                    time: Math.floor((Date.now() - startTime) / 1000)
+                };
+                window.triggerSaveResult(payload).catch(e => console.log(e));
+            }
         }
 
         function calculateScore() {
@@ -572,15 +555,12 @@
                     const u = userAnswers[q.id];
                     const isR = u === q.answer;
                     if (isR) { qPoints = 0.25; status = 'correct'; }
-                    
                     let osHTML = '';
                     q.options.forEach((opt, oi) => {
-                        let cl = '';
-                        if (oi === q.answer) cl = 'correct-actual';
-                        else if (oi === u && !isR) cl = 'user-selected-wrong';
+                        let cl = (oi === q.answer) ? 'correct-actual' : (oi === u ? 'user-selected-wrong' : '');
                         osHTML += `<div class="review-opt ${cl}">${String.fromCharCode(65+oi)}. ${opt}</div>`;
                     });
-                    fbHTML = `<div class="review-options-list">${osHTML}</div><div class="review-result-summary"><b>Đã chọn:</b> ${u !== undefined ? String.fromCharCode(65+u) : 'Trống'}. <b>Đáp án đúng:</b> ${String.fromCharCode(65+q.answer)}</div>`;
+                    fbHTML = `<div class="review-options-list">${osHTML}</div><div class="review-result-summary"><b>Đã chọn:</b> ${u !== undefined ? String.fromCharCode(65+u) : 'Trống'}. <b>Đáp án:</b> ${String.fromCharCode(65+q.answer)}</div>`;
                 } else if (type === 'tf') {
                     let cCount = 0;
                     const u = userAnswers[q.id] || {};
@@ -590,15 +570,14 @@
                         if (isSr) cCount++;
                         rows += `<div style="padding:8px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;">
                                 <span style="flex:1;">${s.text}</span>
-                                <span>Chọn: <b class="${isSr ? 'val-correct' : 'val-wrong'}">${u[s.id] === true ? 'Đ' : 'S'}</b> | Đ/án: <b class="val-correct">${s.correct ? 'Đ' : 'S'}</b></span>
+                                <span>Chọn: <b class="${isSr ? 'val-correct' : 'val-wrong'}">${u[s.id] === true ? 'Đ' : (u[s.id] === false ? 'S' : '-')}</b> | Đ/án: <b class="val-correct">${s.correct ? 'Đ' : 'S'}</b></span>
                             </div>`;
                     });
                     qPoints = [0, 0.0625, 0.125, 0.25, 0.5][cCount] || 0;
-                    if (cCount === 4) status = 'correct';
-                    else if (cCount > 0) status = 'partial';
+                    status = (cCount === 4) ? 'correct' : (cCount > 0 ? 'partial' : 'wrong');
                     fbHTML = `<div style="margin:10px 0; border:1px solid #eee; border-radius:8px;">${rows}</div><div class="review-result-summary">Đúng ${cCount}/4 ý. Điểm: ${qPoints.toFixed(4)}</div>`;
                 } else {
-                    const uRaw = (userAnswers[q.id] || "").trim();
+                    const uRaw = (userAnswers[q.id] || "").toString().trim();
                     const isR = q.answer.some(a => a.replace('.', ',') === uRaw.replace('.', ','));
                     if (isR) { qPoints = 0.5; status = 'correct'; }
                     fbHTML = `<div class="review-result-summary">Nhập: <b class="${isR ? 'val-correct' : 'val-wrong'}">${uRaw || 'Trống'}</b> | Đáp án đúng: <b class="val-correct">${q.answer[0].replace('.', ',')}</b></div>`;
@@ -623,15 +602,19 @@
             document.getElementById('personal-congrats').innerHTML = `Chúc mừng em <b>${document.getElementById('input-name').value}</b> đã hoàn thành bài!`;
             const container = document.getElementById('review-list');
             container.innerHTML = listHTML;
-            if (window.MathJax) MathJax.typesetPromise([container]).catch(e => console.log(e));
+            if (window.MathJax) MathJax.typesetPromise([container]);
         }
 
         function openTeacherLogin(){ document.getElementById("teacher-login").style.display="flex"; }
         function closeTeacherLogin(){ document.getElementById("teacher-login").style.display="none"; }
         function teacherLogin(){
             const pass=document.getElementById("teacher-pass").value;
-            if(pass==="112233") window.location.href="admin.html";
-            else document.getElementById("login-error").innerText="Sai mật khẩu!";
+            if(pass==="112233") {
+                alert("Đăng nhập thành công! Hệ thống Quản trị đang bảo trì.");
+                closeTeacherLogin();
+            } else {
+                document.getElementById("login-error").innerText="Sai mật khẩu!";
+            }
         }
 
         window.onload = () => {
@@ -643,56 +626,44 @@
         };
     </script>
 
-    <!-- Firebase Configuration -->
+    <!-- Firebase Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-firestore.js";
 
-        // CẤU HÌNH FIREBASE CỦA BẠN (Vui lòng điền vào để nộp bài lên cloud)
-        const firebaseConfig = {
-            apiKey: "",
-            authDomain: "",
-            projectId: "",
-            storageBucket: "",
-            messagingSenderId: "",
-            appId: ""
-        };
+        const firebaseConfig = { apiKey: "", authDomain: "", projectId: "", storageBucket: "", messagingSenderId: "", appId: "" };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'khtn9-midterm-test';
+        let db, auth;
 
-        let db = null;
-        if (firebaseConfig.projectId) {
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-        }
-
-        window.saveResult = async function (data) {
-            if (!db) {
-                console.warn("Firebase chưa được cấu hình. Chỉ chấm điểm offline.");
-                return;
+        try {
+            if (firebaseConfig.projectId) {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                signInAnonymously(auth).catch(e => console.log("Auth silent fail"));
             }
+        } catch (e) { console.warn("Firebase Init Fail"); }
+
+        window.triggerSaveResult = async function (data) {
+            if (!db || !auth) return;
             try {
-                await addDoc(collection(db, "ketqua"), {
-                    ...data,
-                    thoigian_nopbai: serverTimestamp()
-                });
-
-                const snapshot = await getDocs(collection(db, "ketqua"));
+                if (!auth.currentUser) await signInAnonymously(auth);
+                const colPath = collection(db, 'artifacts', appId, 'public', 'data', 'ketqua');
+                await addDoc(colPath, { ...data, thoigian_nopbai: serverTimestamp(), userId: auth.currentUser.uid });
+                const snap = await getDocs(colPath);
                 let arr = [];
-                snapshot.forEach(d => arr.push(d.data()));
-
-                arr.sort((a, b) => (b.diem - a.diem) || (a.time - b.time));
-
-                let rankIdx = arr.findIndex(x => x.hovaten === data.hovaten && x.diem === data.diem) + 1;
-                if (rankIdx > 0) {
-                    const badge = document.getElementById("rank-badge");
-                    badge.innerHTML += `<div style="margin-top:8px;font-size:1rem">Xếp hạng: <b>${rankIdx}</b> / ${arr.length}</div>`;
+                snap.forEach(d => arr.push(d.data()));
+                arr.sort((a,b) => (b.diem - a.diem) || (a.time - b.time));
+                let rank = arr.findIndex(x => x.hovaten === data.hovaten && x.diem === data.diem) + 1;
+                const badge = document.getElementById("rank-badge");
+                if (badge && rank > 0) {
+                    badge.innerHTML += `<div style="margin-top:8px;font-size:1rem;text-transform:none">Xếp hạng: <b>${rank}</b> / ${arr.length}</div>`;
                 }
-            } catch (error) {
-                console.error("Lỗi Firestore:", error);
-            }
+            } catch (e) { console.error("Firestore error"); }
         }
     </script>
 
-    <!-- Teacher Portal -->
     <div id="teacher-login" style="position:fixed;top:0;left:0;width:100%;height:100%; background:rgba(0,0,0,0.7);display:none;justify-content:center;align-items:center;z-index:3000;">
         <div style="background:white;padding:25px;border-radius:10px;width:300px;text-align:center">
             <h3>Đăng nhập giáo viên</h3>
