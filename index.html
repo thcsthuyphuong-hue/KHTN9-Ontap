@@ -584,7 +584,6 @@ else qtype = 'short';
     finished = true;
     clearInterval(timer);
     calculateScore();
-document.getElementById('final-score').textContent = final.toFixed(1);
           await saveResult({
     sobaodanh: document.getElementById("input-sbd").value,
     hovaten: document.getElementById("input-name").value,
@@ -1010,68 +1009,28 @@ if(b.diem!==a.diem) return b.diem-a.diem
 return a.thoigian_lambai-b.thoigian_lambai
 })
 console.log("TOP 10",arr.slice(0,10))
-
 }
-
-
 /* =========================
    STATISTICS ENGINE
 ========================= */
-
 async function teacherStats(){
-
 const snapshot=await getDocs(collection(db,"ketqua"))
-
 let scores=[]
-
 snapshot.forEach(d=>scores.push(d.data().diem))
-
 let avg=scores.reduce((a,b)=>a+b,0)/scores.length
-
 console.log("Điểm TB",avg)
-
 }
-
 /* =========================
    RESIZE DETECTION
 ========================= */
-
 let lastWidth=window.innerWidth
-
 window.addEventListener("resize",()=>{
-lastWidth = window.innerWidth
-
-if(!isPractice && !finished){
-
 if(Math.abs(window.innerWidth-lastWidth)>200){
-
 document.getElementById('violation-reason').textContent="Phát hiện thay đổi kích thước cửa sổ"
 triggerAutoSubmit()
 }
-}
+lastWidth = window.innerWidth
 })
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
