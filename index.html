@@ -354,10 +354,64 @@ let startTime = 0;
             }
 
             // Prep data
-            const mcqs = shuffle([...BANK.mcq]).slice(0, 12);
-            const tfs = shuffle([...BANK.tf]).slice(0, 4);
-            const shorts = shuffle([...BANK.short]).slice(0, 4);
-            currentQuiz = [...mcqs, ...tfs, ...shorts];
+            // ===== PRO RANDOM EXAM =====
+
+userAnswers = {}
+currentIndex = 0
+
+let history = JSON.parse(localStorage.getItem("khtn9_history") || "[]").flat()
+
+let mcqPool = BANK.mcq.filter(q=>!history.includes(q.id))
+
+if(mcqPool.length < 12) mcqPool=[...BANK.mcq]
+
+shuffle(mcqPool)
+
+let b = mcqPool.filter(q=>q.level==="Biết")
+let h = mcqPool.filter(q=>q.level==="Hiểu")
+let v = mcqPool.filter(q=>q.level==="VD")
+
+shuffle(b)
+shuffle(h)
+shuffle(v)
+
+let mcqs=[
+...b.slice(0,4),
+...h.slice(0,4),
+...v.slice(0,4)
+]
+
+// shuffle ABCD
+mcqs = mcqs.map(q=>{
+
+let arr=q.options.map((o,i)=>({text:o,correct:i===q.answer}))
+
+shuffle(arr)
+
+q.options=arr.map(x=>x.text)
+
+q.answer=arr.findIndex(x=>x.correct)
+
+return q
+
+})
+
+// TF shuffle
+let tfs = shuffle([...BANK.tf]).slice(0,4).map(q=>{
+shuffle(q.statements)
+return q
+})
+
+let shorts = shuffle([...BANK.short]).slice(0,4)
+
+currentQuiz = shuffle([...mcqs,...tfs,...shorts])
+
+// save history
+let newHistory=[currentQuiz.map(q=>q.id),...(JSON.parse(localStorage.getItem("khtn9_history")||"[]"))]
+
+if(newHistory.length>3) newHistory=newHistory.slice(0,3)
+
+localStorage.setItem("khtn9_history",JSON.stringify(newHistory))
             
             document.getElementById('user-info').textContent = `Học sinh: ${name} - SBD: ${document.getElementById('input-sbd').value}`;
             document.getElementById('welcome-screen').classList.remove('active');
@@ -977,6 +1031,7 @@ triggerAutoSubmit()
 </script>
 </body>
 </html>
+
 
 
 
