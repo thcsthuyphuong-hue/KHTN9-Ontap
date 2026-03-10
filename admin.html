@@ -148,33 +148,33 @@ if(d.thoigian_nopbai){
 tg=d.thoigian_nopbai.toDate().toLocaleString("vi-VN");
 }
 
+let diem = Number(d.diem);
+
+if(isNaN(diem)) diem="";
+
 allData.push({
-sbd:d.sobaodanh,
-ten:d.hovaten,
+sbd:d.sobaodanh||"",
+ten:d.hovaten||"",
 lop:d.lop||"",
-diem:Number(d.diem),
-time:d.thoigian_lambai,
+diem:diem,
+time:d.thoigian_lambai||"",
 nop:tg
 });
 
 });
 
 initClassFilter();
-
 renderTable();
-
 updateStats();
-
 drawChart();
 
 }
 
 loadData();
 
-
 function initClassFilter(){
 
-const classes=[...new Set(allData.map(x=>x.lop))];
+const classes=[...new Set(allData.map(x=>x.lop).filter(x=>x))];
 
 const select=document.getElementById("filter-class");
 
@@ -186,7 +186,6 @@ select.appendChild(op);
 });
 
 }
-
 
 function renderTable(){
 
@@ -209,7 +208,7 @@ const row=`
 <tr>
 <td>${r.sbd}</td>
 <td>${r.ten}</td>
-<td>\t${r.lop}</td>
+<td>${r.lop}</td>
 <td>${r.diem}</td>
 <td>${r.time}</td>
 <td>${r.nop}</td>
@@ -225,16 +224,18 @@ body.innerHTML+=row;
 document.getElementById("search-sbd").oninput=renderTable;
 document.getElementById("filter-class").onchange=renderTable;
 
-
-
 function updateStats(){
 
 let pass=0;
 let fail=0;
 
 allData.forEach(r=>{
+
+if(!isNaN(r.diem)){
 if(r.diem>=4) pass++;
 else fail++;
+}
+
 });
 
 document.getElementById("stat-total").innerText="Tổng bài: "+allData.length;
@@ -243,15 +244,17 @@ document.getElementById("stat-fail").innerText="Chưa đạt: "+fail;
 
 }
 
-
-
 function drawChart(){
 
 let bins=[0,0,0,0,0,0,0];
 
 allData.forEach(r=>{
+
+if(!isNaN(r.diem)){
 let s=Math.floor(r.diem);
 if(s>=0 && s<=6) bins[s]++;
+}
+
 });
 
 new Chart(document.getElementById("scoreChart"),{
@@ -268,8 +271,6 @@ backgroundColor:"#1976d2"
 
 }
 
-
-
 window.exportExcel=function(){
 
 let data=[...allData];
@@ -280,10 +281,16 @@ return a.lop.localeCompare(b.lop);
 });
 
 let sum=0;
+let count=0;
 
-data.forEach(r=>sum+=r.diem);
+data.forEach(r=>{
+if(!isNaN(r.diem)){
+sum+=Number(r.diem);
+count++;
+}
+});
 
-let avg=(sum/data.length).toFixed(2);
+let avg=(sum/count).toFixed(2);
 
 data.push({
 sbd:"",
@@ -294,7 +301,13 @@ time:"",
 nop:""
 });
 
-const ws=XLSX.utils.json_to_sheet(data);
+const ws=XLSX.utils.json_to_sheet(data,{
+header:["sbd","ten","lop","diem","time","nop"]
+});
+
+XLSX.utils.sheet_add_aoa(ws,[[
+"SBD","Họ và tên","Lớp","Điểm","Thời gian làm bài","Thời gian nộp"
+]],{origin:"A1"});
 
 ws["!cols"]=[
 {wch:10},
@@ -304,22 +317,6 @@ ws["!cols"]=[
 {wch:18},
 {wch:22}
 ];
-
-const range=XLSX.utils.decode_range(ws['!ref']);
-
-for(let R=1;R<=range.e.r;R++){
-
-let cell=ws["D"+(R+1)];
-
-if(cell && Number(cell.v)<4){
-
-cell.s={
-fill:{fgColor:{rgb:"FF9999"}}
-};
-
-}
-
-}
 
 const wb=XLSX.utils.book_new();
 
