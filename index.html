@@ -921,36 +921,24 @@ function shuffleStatements(question){
 shuffle(question.statements)
 
 return question
-
 }
-
-
 /* =========================
    BUILD EXAM
 ========================= */
-
 function buildExam(){
-
 let mcqPool=avoidRecent(BANK.mcq)
-
 if(mcqPool.length<12) mcqPool=[...BANK.mcq]
-
 let b=mcqPool.filter(q=>q.level==="Biết")
 let h=mcqPool.filter(q=>q.level==="Hiểu")
 let v=mcqPool.filter(q=>q.level==="VD")
-
 shuffle(b)
 shuffle(h)
 shuffle(v)
-
 let mcqs=[
-
 ...b.slice(0,4),
 ...h.slice(0,4),
 ...v.slice(0,4)
-
 ]
-
 mcqs=mcqs.map(q=>shuffleOptions({...q}))
 
 let tfs=shuffle([...BANK.tf]).slice(0,4).map(q=>shuffleStatements({...q}))
@@ -965,43 +953,29 @@ return exam
 
 }
 
-
 /* =========================
    OVERRIDE INITGAME
 ========================= */
-
-
 /* =========================
    FAST SUBMIT DETECTION
 ========================= */
-
 const originalFinish=finishQuiz
-
 finishQuiz=async function(){
-
 let duration=(Date.now()-startTime)/1000
-
 if(duration<120){
 
 alert("⚠️ Hệ thống phát hiện nộp bài quá nhanh.")
 
 }
-
 await originalFinish()
-
 }
-
 
 /* =========================
    LEADERBOARD SYSTEM
 ========================= */
-
 async function loadLeaderboard(){
-
 const snapshot=await getDocs(collection(db,"ketqua"))
-
 let arr=[]
-
 snapshot.forEach(d=>arr.push(d.data()))
 
 arr.sort((a,b)=>{
@@ -1023,14 +997,27 @@ console.log("Điểm TB",avg)
 /* =========================
    RESIZE DETECTION
 ========================= */
-let lastWidth=window.innerWidth
+let lastWidth = window.innerWidth
+
 window.addEventListener("resize",()=>{
-if(Math.abs(window.innerWidth-lastWidth)>200){
-document.getElementById('violation-reason').textContent="Phát hiện thay đổi kích thước cửa sổ"
+
+if(!isPractice && !finished){
+
+if(Math.abs(window.innerWidth-lastWidth) > 200){
+
+document.getElementById('violation-reason').textContent =
+"Phát hiện thay đổi kích thước cửa sổ"
+
 triggerAutoSubmit()
+
 }
+
+}
+
 lastWidth = window.innerWidth
+
 })
 </script>
 </body>
 </html>
+
