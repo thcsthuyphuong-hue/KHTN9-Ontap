@@ -398,14 +398,19 @@ return q
 
 // TF shuffle
 let tfs = shuffle([...BANK.tf]).slice(0,4).map(q=>{
-shuffle(q.statements)
+let tfs = shuffle([...BANK.tf]).slice(0,4).map(q=>{
+let copy = {...q}
+copy.statements = shuffle([...q.statements])
+return copy
+})
 return q
 })
-
 let shorts = shuffle([...BANK.short]).slice(0,4)
-
-currentQuiz = shuffle([...mcqs,...tfs,...shorts])
-
+currentQuiz = [
+...shuffle(mcqs),
+...shuffle(tfs),
+...shuffle(shorts)
+]
 // save history
 let newHistory=[currentQuiz.map(q=>q.id),...(JSON.parse(localStorage.getItem("khtn9_history")||"[]"))]
 
@@ -415,8 +420,7 @@ localStorage.setItem("khtn9_history",JSON.stringify(newHistory))
             
             document.getElementById('user-info').textContent = `Học sinh: ${name} - SBD: ${document.getElementById('input-sbd').value}`;
             document.getElementById('welcome-screen').classList.remove('active');
-            document.getElementById('quiz-screen').classList.add('active');
-            
+            document.getElementById('quiz-screen').classList.add('active');   
             renderQuestion();
         }
         function handleCheat() {
@@ -1031,6 +1035,7 @@ triggerAutoSubmit()
 </script>
 </body>
 </html>
+
 
 
 
