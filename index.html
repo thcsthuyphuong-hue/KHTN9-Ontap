@@ -588,7 +588,7 @@ else qtype = 'short';
     sobaodanh: document.getElementById("input-sbd").value,
     hovaten: document.getElementById("input-name").value,
     lop: document.getElementById("input-class").value,
-   diem: parseFloat(document.getElementById("final-score").textContent),
+  diem: finalScore,
     time: Math.floor((Date.now() - startTime) / 1000)
 })
             playSfx('submit');
@@ -1019,5 +1019,6 @@ lastWidth = window.innerWidth
 </script>
 </body>
 </html>
+
 
 
