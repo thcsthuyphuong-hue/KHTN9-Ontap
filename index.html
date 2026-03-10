@@ -589,7 +589,7 @@ await saveResult({
     hovaten: document.getElementById("input-name").value,
     lop: document.getElementById("input-class").value,
     truong: document.getElementById("input-school").value,
-diem: parseFloat(document.getElementById("final-score").textContent.split("/")[0]),
+diem: parseFloat(document.getElementById("final-score").textContent),
     time: Math.floor((Date.now() - startTime) / 1000)
 });
             playSfx('submit');
@@ -731,20 +731,6 @@ window.db = db;
 window.saveResult = async function (data) {
   try {
     await addDoc(collection(db, "ketqua"), {
-      sobaodanh: data.sobaodanh,
-      hovaten: data.hovaten,
-      lop: data.lop,
-      diem: data.diem,
-      thoigian_lambai: data.time,
-      thoigian_nopbai: serverTimestamp()
-    });
-    console.log("Đã lưu kết quả vào Firebase");
-  } catch (error) {
-    console.error("Lỗi lưu dữ liệu:", error);
-  }
-};
-
-</script>
       sobaodanh: data.sobaodanh,
       hovaten: data.hovaten,
       lop: data.lop,
@@ -1048,6 +1034,7 @@ triggerAutoSubmit()
 </script>
 </body>
 </html>
+
 
 
 
