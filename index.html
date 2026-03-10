@@ -706,8 +706,278 @@ function teacherLogin(){
  }
 }
 </script>
+    <script>
+
+/* =========================
+   PRO MAX SECURITY SYSTEM
+========================= */
+
+document.addEventListener("contextmenu",e=>{
+if(!isPractice) e.preventDefault()
+})
+
+document.addEventListener("copy",e=>{
+if(!isPractice){
+e.preventDefault()
+alert("Không được sao chép đề!")
+}
+})
+
+let devtools=false
+
+setInterval(()=>{
+
+if(window.outerWidth-window.innerWidth>160){
+
+devtools=true
+
+if(!isPractice && !finished){
+
+document.getElementById('violation-reason').textContent="Phát hiện mở DevTools"
+
+triggerAutoSubmit()
+
+}
+
+}
+
+},1000)
+
+
+/* =========================
+   RANDOM EXAM ENGINE
+========================= */
+
+function seededRandom(seed){
+
+let x=Math.sin(seed++)*10000
+
+return x-Math.floor(x)
+
+}
+
+function shuffleSeed(arr,seed){
+
+for(let i=arr.length-1;i>0;i--){
+
+const j=Math.floor(seededRandom(seed+i)*(i+1))
+
+[arr[i],arr[j]]=[arr[j],arr[i]]
+
+}
+
+return arr
+
+}
+
+
+/* =========================
+   HISTORY SYSTEM
+========================= */
+
+const HISTORY_KEY="khtn9_history"
+
+function getHistory(){
+
+return JSON.parse(localStorage.getItem(HISTORY_KEY)||"[]")
+
+}
+
+function saveHistory(set){
+
+let h=getHistory()
+
+h.unshift(set)
+
+if(h.length>3) h=h.slice(0,3)
+
+localStorage.setItem(HISTORY_KEY,JSON.stringify(h))
+
+}
+
+function avoidRecent(bank){
+
+const history=getHistory().flat()
+
+return bank.filter(q=>!history.includes(q.id))
+
+}
+
+
+/* =========================
+   SHUFFLE OPTIONS
+========================= */
+
+function shuffleOptions(question){
+
+const arr=question.options.map((opt,i)=>({
+
+text:opt,
+
+correct:(i===question.answer)
+
+}))
+
+shuffle(arr)
+
+question.options=arr.map(x=>x.text)
+
+question.answer=arr.findIndex(x=>x.correct)
+
+return question
+
+}
+
+
+/* =========================
+   SHUFFLE TRUE FALSE
+========================= */
+
+function shuffleStatements(question){
+
+shuffle(question.statements)
+
+return question
+
+}
+
+
+/* =========================
+   BUILD EXAM
+========================= */
+
+function buildExam(){
+
+let mcqPool=avoidRecent(BANK.mcq)
+
+if(mcqPool.length<12) mcqPool=[...BANK.mcq]
+
+let b=mcqPool.filter(q=>q.level==="Biết")
+let h=mcqPool.filter(q=>q.level==="Hiểu")
+let v=mcqPool.filter(q=>q.level==="VD")
+
+shuffle(b)
+shuffle(h)
+shuffle(v)
+
+let mcqs=[
+
+...b.slice(0,4),
+...h.slice(0,4),
+...v.slice(0,4)
+
+]
+
+mcqs=mcqs.map(q=>shuffleOptions({...q}))
+
+let tfs=shuffle([...BANK.tf]).slice(0,4).map(q=>shuffleStatements({...q}))
+
+let shorts=shuffle([...BANK.short]).slice(0,4)
+
+let exam=shuffle([...mcqs,...tfs,...shorts])
+
+saveHistory(exam.map(q=>q.id))
+
+return exam
+
+}
+
+
+/* =========================
+   OVERRIDE INITGAME
+========================= */
+
+const originalInitGame=initGame
+
+initGame=function(mode){
+
+currentQuiz=buildExam()
+
+originalInitGame(mode)
+
+}
+
+
+/* =========================
+   FAST SUBMIT DETECTION
+========================= */
+
+const originalFinish=finishQuiz
+
+finishQuiz=async function(){
+
+let duration=(Date.now()-startTime)/1000
+
+if(duration<120){
+
+alert("⚠️ Hệ thống phát hiện nộp bài quá nhanh.")
+
+}
+
+await originalFinish()
+
+}
+
+
+/* =========================
+   LEADERBOARD SYSTEM
+========================= */
+
+async function loadLeaderboard(){
+
+const snapshot=await getDocs(collection(db,"ketqua"))
+
+let arr=[]
+
+snapshot.forEach(d=>arr.push(d.data()))
+
+arr.sort((a,b)=>b.diem-a.diem)
+
+console.log("TOP 10",arr.slice(0,10))
+
+}
+
+
+/* =========================
+   STATISTICS ENGINE
+========================= */
+
+async function teacherStats(){
+
+const snapshot=await getDocs(collection(db,"ketqua"))
+
+let scores=[]
+
+snapshot.forEach(d=>scores.push(d.data().diem))
+
+let avg=scores.reduce((a,b)=>a+b,0)/scores.length
+
+console.log("Điểm TB",avg)
+
+}
+
+
+/* =========================
+   RESIZE DETECTION
+========================= */
+
+let lastWidth=window.innerWidth
+
+window.addEventListener("resize",()=>{
+
+if(!isPractice && !finished){
+
+if(Math.abs(window.innerWidth-lastWidth)>200){
+
+document.getElementById('violation-reason').textContent="Phát hiện thay đổi kích thước cửa sổ"
+triggerAutoSubmit()
+}
+}
+})
+</script>
 </body>
 </html>
+
 
 
 
