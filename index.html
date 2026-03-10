@@ -589,7 +589,7 @@ document.getElementById('final-score').textContent = final.toFixed(1);
     sobaodanh: document.getElementById("input-sbd").value,
     hovaten: document.getElementById("input-name").value,
     lop: document.getElementById("input-class").value,
-    diem: finalScore,
+   diem: parseFloat(document.getElementById("final-score").textContent),
     time: Math.floor((Date.now() - startTime) / 1000)
 })
             playSfx('submit');
@@ -811,7 +811,7 @@ function teacherLogin(){
 document.addEventListener("contextmenu",e=>{
 if(!isPractice) e.preventDefault()
 })
-ocument.addEventListener("copy",e=>{
+document.addEventListener("copy",e=>{
 if(!isPractice){
 e.preventDefault()
 alert("Không được sao chép đề!")
@@ -1039,6 +1039,7 @@ console.log("Điểm TB",avg)
 let lastWidth=window.innerWidth
 
 window.addEventListener("resize",()=>{
+lastWidth = window.innerWidth
 
 if(!isPractice && !finished){
 
@@ -1052,6 +1053,7 @@ triggerAutoSubmit()
 </script>
 </body>
 </html>
+
 
 
 
